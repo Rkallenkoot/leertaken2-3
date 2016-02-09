@@ -1,4 +1,4 @@
-## Leertaken thema 2.1
+## Leertaken thema 2.3
 
 In deze repository bevinden zich uitwerkingen van de leertaken.
 
@@ -12,3 +12,7 @@ Eventuele beschrijving van leertaak 1
 
 #### Leertaak 2
 
+
+### Code style
+
+https://google.github.io/styleguide/javaguide.html
