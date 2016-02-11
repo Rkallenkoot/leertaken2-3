@@ -11,7 +11,7 @@ public class DobbelsteenModelTest {
     @Test
     public void testGetWaarde() throws Exception {
         DobbelsteenModel dobbelsteenModel = new DobbelsteenModel(TEST_VALUE);
-        assertEquals(3, dobbelsteenModel.getWaarde());
+        assertEquals(TEST_VALUE, dobbelsteenModel.getWaarde());
     }
 
     @Test
@@ -19,12 +19,12 @@ public class DobbelsteenModelTest {
         DobbelsteenModel dobbelsteenModel = new DobbelsteenModel(TEST_VALUE);
         dobbelsteenModel.verhoog();
 
-        assertEquals(4, dobbelsteenModel.getWaarde());
+        assertEquals(TEST_VALUE+1, dobbelsteenModel.getWaarde());
         dobbelsteenModel.verhoog();
 
-        assertEquals(5, dobbelsteenModel.getWaarde());
+        assertEquals(TEST_VALUE+2, dobbelsteenModel.getWaarde());
         dobbelsteenModel.verhoog();
-        assertEquals(6, dobbelsteenModel.getWaarde());
+        assertEquals(TEST_VALUE+3, dobbelsteenModel.getWaarde());
 
     }
 
