@@ -20,6 +20,8 @@ package multiformat;
 
 /**
  * Class representing a rational ('breuk').
+ * 
+ * @version 1.0.1
  * @author J.Balj�: Added comments
  * @author Iris Meijer
  * @author Roelof Kallenkoot: Added JavaDoc
