@@ -68,5 +68,26 @@ public class TestRational {
 	}
 
 
+	@Test
+	public void testDivideByZero() {
+		Rational r1 = new Rational(5);
+		Rational zero = new Rational(0);
+		try {
+			r1.div(zero);
+			fail("Should've thrown IllegalArgumentException");
+		} catch(IllegalArgumentException ex){
+            // no-op when caught, test passes
+        }
+	}
+
+    @Test
+    public void testDivision() {
+        Rational r1 = new Rational(5.0);
+        Rational r2 = new Rational(5.0);
+
+        Rational result = r1.div(r2);
+        assertEquals(1, result.getNumerator(), DELTA);
+
+    }
 
 }

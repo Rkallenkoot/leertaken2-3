@@ -20,7 +20,7 @@ package multiformat;
 
 /**
  * Class representing a rational ('breuk').
- * 
+ *
  * @version 1.0.1
  * @author J.Balj�: Added comments
  * @author Iris Meijer
@@ -141,7 +141,10 @@ public class Rational {
      * @param other Another rational to divide by
      * @return A new Rational representing the result of the division
      */
-	public Rational div(Rational other) {
+	public Rational div(Rational other) throws IllegalArgumentException {
+        if(other.numerator == 0 || other.denominator == 0){
+            throw new IllegalArgumentException("Unable to divide by 0");
+        }
 		return new Rational(
 			numerator * other.denominator,
 			denominator * other.numerator);

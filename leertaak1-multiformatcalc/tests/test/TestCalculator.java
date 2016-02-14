@@ -43,7 +43,12 @@ public class TestCalculator {
             calc.add();
             assertEquals("0.0",calc.firstOperand());
             assertEquals("6.0",calc.secondOperand());
-        }catch(FormatException e){
+
+            calc.addOperand("6.0");
+            calc.divide();
+            assertEquals("1.0", calc.secondOperand());
+
+        } catch(FormatException e){
             fail("Unexpected format exception");
         }
     }
