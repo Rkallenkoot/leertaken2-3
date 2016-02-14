@@ -1,6 +1,5 @@
 package nl.hanze.duo3.Helpers;
 
-
 import nl.hanze.duo3.Exception.ArraySizeException;
 
 public class ArrayHelper {
@@ -17,3 +16,4 @@ public class ArrayHelper {
     }
 
 }
+
