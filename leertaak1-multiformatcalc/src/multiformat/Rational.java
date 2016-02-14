@@ -20,7 +20,9 @@ package multiformat;
 
 /**
  * Class representing a rational ('breuk').
- * @author J.Baljé: Added comments
+ * @author J.Baljï¿½: Added comments
+ * @author Iris Meijer
+ * @author Roelof Kallenkoot: Added JavaDoc
  */
 public class Rational {
 	static final double PRECISION=10;
@@ -121,36 +123,69 @@ public class Rational {
 								,denominator * other.denominator);
 	}
 
+    /**
+     * Multiple two rationals
+     * @param other Another Rational to multiply with
+     * @return A new Rational representing the result
+     */
 	public Rational mul(Rational other) {
 		return new Rational(
 			numerator * other.numerator,
 			denominator * other.denominator);
 	}
 
+    /**
+     * Divide this rational by another rational
+     * @param other Another rational to divide by
+     * @return A new Rational representing the result of the division
+     */
 	public Rational div(Rational other) {
 		return new Rational(
 			numerator * other.denominator,
 			denominator * other.numerator);
 	}
 
+    /**
+     * Copy the values of the other Rational into this Rational
+     * @param other Another rational to copy values of
+     */
 	public void copyOf(Rational other) {
 		this.numerator = other.numerator;
 		this.denominator = other.denominator;
 	}
 	
 	// Added getters and setters for unittesting purposes.
+
+    /**
+     * Get the numerator of this Rational
+     * @return numerator of this Rational
+     */
 	public double getNumerator(){
 		return numerator;
 	}
-	
+
+    /**
+     * get the denominator of this Rational
+     * @return denominator of this Rational
+     */
 	public double getDenominator() {
 		return denominator;
 	}
+
+    /**
+     * Set the numerator of this Rational
+     * @param num Number to set the numerator to
+     */
 	public void setNumerator(double num){
 		numerator = num;
 	}
-	
+
+    /**
+     * Set the denominator of this Rational
+     * @param den Number to set the denominator to
+     */
 	public void setDenominator(double den) {
 		denominator = den;
 	}
+
 }
