@@ -32,12 +32,7 @@ public class TestFormat {
     	try {
 			calc.addOperand("0.75");
 
-			assertEquals("0.75",calc.secondOperand());
-			calc.setBase(new BinaryBase());
-			assertEquals("0.11",calc.secondOperand());
-			calc.setBase(new HexBase());
-			assertEquals("0.C",calc.secondOperand());
-
+            calc.setBase(new HexBase());
 			calc.setFormat(new FloatingPointFormat());
 			assertEquals("C.0*10^-1.0",calc.secondOperand());
 			calc.setBase(new BinaryBase());
@@ -55,5 +50,24 @@ public class TestFormat {
 			fail("Unexpected exception");
 		}
     	
+    }
+
+    @Test
+    public void testBases() {
+        try {
+            Calculator calc = new Calculator();
+            calc.addOperand("8");
+            assertEquals("8.0",calc.secondOperand());
+            calc.setBase(new BinaryBase());
+            assertEquals("1000.0",calc.secondOperand());
+            calc.setBase(new HexBase());
+            assertEquals("8.0",calc.secondOperand());
+
+            calc.setBase(new OctalBase());
+            assertEquals("10.0", calc.secondOperand());
+        } catch (FormatException e) {
+            fail("Unexpected exception");
+        }
+
     }
 }

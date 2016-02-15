@@ -18,6 +18,8 @@
  */
 package multiformat;
 
+import java.util.Arrays;
+
 /**
  * The multiformat calculator
  */
@@ -31,6 +33,10 @@ public class Calculator {
   private Base base = new DecimalBase();
 
   public void addOperand(String newOperand) throws FormatException {
+      String digits[] = this.base.getDigits().split("");
+      if(!Arrays.asList(digits).contains(newOperand)){
+          throw new NumberBaseException(newOperand + " is not a correct digit");
+      }
 	  operand_1 = operand_0;
       operand_0 = format.parse(newOperand, base);
   }
