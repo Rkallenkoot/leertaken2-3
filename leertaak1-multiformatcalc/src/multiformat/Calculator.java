@@ -33,6 +33,14 @@ import java.awt.event.ActionListener;
  */
 public class Calculator {
 
+    public static final String ADD = "ADD";
+    public static final String MINUS = "MIN";
+    public static final String MULTIPLY = "MUL";
+    public static final String DIVISION = "DIV";
+
+    public static final String ADD_OPERAND = "ADD_OPERAND";
+    public static final String DELETE = "DELETE";
+
 
     private String inputText;
 
@@ -62,14 +70,14 @@ public class Calculator {
         operand_1 = operand_0;
         operand_0 = format.parse(operand, base);
         setInputText("");
-        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ADD_OPERAND));
     }
 
     public void addOperand(String newOperand) throws FormatException, NumberBaseException {
         this.validateOperand(newOperand);
         operand_1 = operand_0;
         operand_0 = format.parse(newOperand, base);
-        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ADD_OPERAND));
     }
 
     private void validateOperand(String operand) throws NumberBaseException {
@@ -93,17 +101,17 @@ public class Calculator {
     public void add(){
         operand_0 = operand_1.plus(operand_0);
         operand_1 = new Rational();
-        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ADD));
     }
     public void subtract() {
         operand_0 = operand_1.minus(operand_0);
         operand_1 = new Rational();
-        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, MINUS));
     }
     public void multiply() {
         operand_0 = operand_1.mul(operand_0);
         operand_1 = new Rational();
-        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, MULTIPLY));
     }
     public void divide() {
         try {
@@ -112,14 +120,14 @@ public class Calculator {
             System.out.println(ex.getMessage());
         } finally {
             operand_1 = new Rational();
-            processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+            processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, DIVISION));
         }
     }
     public void delete() {
         operand_0 = operand_1;
         operand_1 = new Rational();
         setInputText("");
-        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+        processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, DELETE));
     }
 
     public String firstOperand(){
