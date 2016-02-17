@@ -48,8 +48,10 @@ public class TestFormat {
 			assertEquals("3.0/4.0",calc.secondOperand());
 		} catch (FormatException e) {
 			fail("Unexpected exception");
-		}
-    	
+		} catch (NumberBaseException e) {
+            fail(e.getMessage());
+        }
+
     }
 
     @Test
@@ -57,16 +59,18 @@ public class TestFormat {
         try {
             Calculator calc = new Calculator();
             calc.addOperand("8");
+
             assertEquals("8.0",calc.secondOperand());
             calc.setBase(new BinaryBase());
             assertEquals("1000.0",calc.secondOperand());
             calc.setBase(new HexBase());
             assertEquals("8.0",calc.secondOperand());
-
             calc.setBase(new OctalBase());
             assertEquals("10.0", calc.secondOperand());
         } catch (FormatException e) {
             fail("Unexpected exception");
+        } catch (NumberBaseException e) {
+            fail(e.getMessage());
         }
 
     }

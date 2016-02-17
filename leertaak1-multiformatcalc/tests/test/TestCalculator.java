@@ -24,6 +24,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import java.text.NumberFormat;
+
 public class TestCalculator {
 
     @Test
@@ -50,6 +52,8 @@ public class TestCalculator {
 
         } catch(FormatException e){
             fail("Unexpected format exception");
+        } catch(NumberBaseException e){
+            fail(e.getMessage());
         }
     }
 

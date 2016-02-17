@@ -24,7 +24,7 @@ import java.io.*;
  * De main-klasse die leest en schrijft naar de console.
  * 
  * @author Brugali
- * @author Baljé
+ * @author Baljï¿½
  */
 public class Command {
   Calculator calc=new Calculator();
@@ -64,6 +64,8 @@ public class Command {
         	calc.addOperand(command.substring(2).trim());
         }catch(FormatException e){
           System.out.println("Wrong operand: " + e.getMessage());
+        } catch(NumberBaseException e){
+          System.out.println(e.getMessage());
         }
       }else if(command.indexOf("read")>=0){
         try{
