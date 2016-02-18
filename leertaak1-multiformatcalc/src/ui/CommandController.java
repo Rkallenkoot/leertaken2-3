@@ -153,6 +153,9 @@ public class CommandController extends JPanel implements ActionListener {
             mCalc.multiply();
         } else if (src == mAddOperand) {
             try {
+                if(mCalc.getInputText().length() == 0){
+                    return;
+                }
                 mCalc.addOperand();
             } catch (FormatException | NumberBaseException e1) {
                 JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);

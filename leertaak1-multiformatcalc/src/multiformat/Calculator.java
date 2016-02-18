@@ -74,6 +74,9 @@ public class Calculator {
     }
 
     public void addOperand(String newOperand) throws FormatException, NumberBaseException {
+        if(newOperand.length() == 0){
+            throw new FormatException("Empty operand");
+        }
         this.validateOperand(newOperand);
         operand_1 = operand_0;
         operand_0 = format.parse(newOperand, base);
