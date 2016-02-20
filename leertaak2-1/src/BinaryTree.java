@@ -1,8 +1,13 @@
-public class BinaryTree<E extends Comparable<E>> extends AbstractTree<E>{
+import java.util.Stack;
 
+public class BinaryTree<E extends Comparable<E>> extends AbstractTree<E>{
 
     protected TreeNode<E> root;
     protected int size = 0;
+
+    public BinaryTree(TreeNode<E> root){
+        this.root = root;
+    }
 
     public BinaryTree(E[] objects) {
         for (E object : objects) {
@@ -58,24 +63,66 @@ public class BinaryTree<E extends Comparable<E>> extends AbstractTree<E>{
 
     @Override
     public int getSize() {
-        return 0;
+        return size;
     }
 
     @Override
     public int compareTo(E o) {
-        return 0;
+        return o.compareTo(root.element);
     }
 
     @Override
     public void inorder(){
-        inorder(root);
+        Stack<TreeNode<E>> stack = new Stack<>();
+        TreeNode<E> current = root;
+        while(!stack.isEmpty() || current != null){
+            if(current != null){
+                stack.push(current);
+                current = current.left;
+            } else {
+                current = stack.pop();
+                System.out.println(current.element);
+                current = current.right;
+            }
+        }
     }
 
-    public void inorder(TreeNode<E> root) {
+    @Override
+    public void preorder(){
+        Stack<TreeNode<E>> stack = new Stack<>();
+        TreeNode<E> current = root;
+        while(!stack.isEmpty() || current != null){
+            if(current != null){
+                stack.push(current);
+                System.out.println(current.element);
+                current = current.left;
+            } else {
+                current = stack.pop();
+                current = current.right;
+            }
+        }
+    }
+
+    public void postorderRec(TreeNode<E> node){
+        if(node == null) return;
+        postorderRec(node.left);
+        postorderRec(node.right);
+        System.out.println(node.element);
+    }
+
+    public void postorder(){
+        Stack<TreeNode<E>> stack = new Stack<>();
+        TreeNode<E> current = root;
+        while(!stack.isEmpty() || current != null){
+
+        }
+    }
+
+    public void inorderRec(TreeNode<E> root) {
         if(root == null) return;
-        inorder(root.left);
+        inorderRec(root.left);
         System.out.println(root.element + " ");
-        inorder(root.right);
+        inorderRec(root.right);
     }
 
     public void clear(){
