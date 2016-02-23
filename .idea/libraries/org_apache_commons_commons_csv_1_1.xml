@@ -5,6 +5,8 @@
       <root url="jar://$PROJECT_DIR$/lib/commons-csv-1.1.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/commons-csv-1.1-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
