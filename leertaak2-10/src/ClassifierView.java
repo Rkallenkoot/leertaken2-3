@@ -73,14 +73,6 @@ public class ClassifierView extends JFrame implements ActionListener, ItemListen
         this.add(panel, BorderLayout.SOUTH);
     }
 
-    private String getAssignedCategory(){
-        // alle properties omzetten naar iets
-        // item maken en die
-        Item item = null;
-
-
-        return tree.getAssignedCategory(item);
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
