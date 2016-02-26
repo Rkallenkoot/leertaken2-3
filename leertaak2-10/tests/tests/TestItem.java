@@ -1,7 +1,7 @@
+package tests;
 import junit.framework.TestCase;
 
 import classifier.*;
-import org.junit.Test;
 
 public class TestItem extends TestCase {
 
@@ -9,7 +9,6 @@ public class TestItem extends TestCase {
 		super(arg0);
 	}
 
-    @Test
 	public void testFeatureType(){
 		String featureTypeName="YesNo";
 		String[] allowedValues = new String[]
@@ -21,8 +20,7 @@ public class TestItem extends TestCase {
 			assertTrue(type.isAllowed(allowedValues[i]));
 		}
 	}
-
-    @Test
+	
 	public void testFeature(){
 		String featureTypeName="YesNo";
 		String[] allowedValues = new String[]
@@ -49,9 +47,7 @@ public class TestItem extends TestCase {
 			assertTrue(true);
 		}
 	}
-
-
-    @Test
+	
 	public void testItem(){
 		FeatureType yn = new FeatureType("YesNo"
 						,new String[]{"yes","no"});

@@ -51,6 +51,7 @@ public class ClassifierView extends JFrame implements ActionListener, ItemListen
             labelPanel.add(checkbox);
         }
         this.add(labelPanel, BorderLayout.CENTER);
+        invalidate();
     }
 
     private void setupButton(){

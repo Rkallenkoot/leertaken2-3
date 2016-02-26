@@ -33,7 +33,6 @@ public class GetalRij {
 
         while(high >= low){
             int mid = (low+high) / 2;
-            System.out.println("DELING");
             if(zoekWaarde < getallen[mid]){
                 high = mid - 1;
             } else if (zoekWaarde == getallen[mid]){

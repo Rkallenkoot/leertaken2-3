@@ -1,6 +1,6 @@
-package test;
 import junit.framework.TestCase;
 import classifier.*;
+import org.junit.Test;
 
 import java.io.*;
 import java.net.URL;
@@ -94,6 +94,7 @@ public class TestFileReader extends TestCase {
          return new File(url.getPath()).getParentFile();
     }
 
+    @Test
 	public void testCategory(){
 		DecisionTree dt = buildTree();
 

@@ -1,7 +1,7 @@
-package test;
 import classifier.*;
-import junit.framework.TestCase;
 
+import junit.framework.TestCase;
+import org.junit.Test;
 
 
 public class TestClassifier extends TestCase {
@@ -32,6 +32,8 @@ public class TestClassifier extends TestCase {
 		
 		return new DecisionTree(root);
     }
+
+	@Test
 	public void testCategory(){
 		
 		DecisionTree dt = buildTree();

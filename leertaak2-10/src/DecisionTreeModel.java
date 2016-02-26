@@ -35,16 +35,18 @@ public class DecisionTreeModel {
         features = new HashMap<>();
         buildFeaturesMap();
         buildTree();
+        System.out.println(tree.toString());
     }
 
     private void buildFeaturesMap(){
         ClassLoader classLoader = getClass().getClassLoader();
         try {
             Scanner scan = new Scanner(new File(classLoader.getResource(OPTIONS).getFile()));
+            FeatureType yn = new FeatureType("yn", new String[]{"0","1"});
             while (scan.hasNextLine()) {
                 String line = scan.nextLine();
                 featureKeys.add(line);
-                features.put(line, new FeatureType(line, new String[]{"0", "1"}));
+                features.put(line, yn);
             }
         } catch(FileNotFoundException ex){
             ex.printStackTrace();

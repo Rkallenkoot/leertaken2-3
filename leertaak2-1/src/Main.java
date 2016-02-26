@@ -7,7 +7,8 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Opdracht2();
+        Opdracht1();
+//        Opdracht2();
     }
 
     /**
@@ -73,9 +74,11 @@ public class Main {
      */
     private static void Opdracht1(){
         Integer ints[] = {50, 5,15,4,6,14,16};
+
         Integer ints1[] = {50,4,5,6,14,15,16};
 
         BinaryTree<Integer> tree = new BinaryTree<>(ints);
+
         BinaryTree<Integer> tree1 = new BinaryTree<>(ints1);
 
         System.out.println("## Inorder");

@@ -1,7 +1,6 @@
-package tests;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import test.TestRepresentation;
 
 public class AllTests {
 
