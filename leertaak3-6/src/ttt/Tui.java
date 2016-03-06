@@ -28,19 +28,15 @@ class Tui
     
     public static void main( String [ ] args ) { new Tui();}
     
-    private int move()
-    {
-        if (t.computerPlays())
-        {
+    private int move() {
+        if (t.computerPlays()) {
             int compMove = t.chooseMove();
             System.out.println("Computer Move = " + compMove);
             return compMove;
         }
-        else
-        {
+        else {
             int humanMove;
-            do
-            {
+            do {
                 System.out.print("Human move    = ");
                 // enter integer for the position on the tictactoe board
                 // 012
@@ -53,11 +49,9 @@ class Tui
         }
     }
     
-    private boolean nextGame()
-    {
+    private boolean nextGame() {
         Character yn;
-        do 
-        {
+        do {
             System.out.print("next Game? enter Y/N: ");
             yn=(reader.next()).charAt(0);
             System.out.println(""+yn);

@@ -39,25 +39,23 @@ class TicTacToe
     
     public void setHumanPlays()
     {
-        this.side=HUMAN;
+        this.side = HUMAN;
         initSide();
     }
 
 	public boolean computerPlays()
 	{
-	    return side==COMPUTER;
+	    return side == COMPUTER;
 	}
 
-	public int chooseMove()
-	{
+	public int chooseMove() {
 	    //Best best=chooseMove(COMPUTER);
 	    //return best.row*3+best.column;
 	    return 0;
     }
     
     // Find optimal move
-	private Best chooseMove( int side )
-	{
+	private Best chooseMove( int side ) {
 		int opp;              // The other side
 		Best reply;           // Opponent's best reply
 		int simpleEval;       // Result of an immediate evaluation
@@ -74,15 +72,13 @@ class TicTacToe
 
    
     //check if move ok
-    public boolean moveOk(int move)
-    {
- 	//return ( move>=0 && move <=8 && board[move/3 ][ move%3 ] == EMPTY );
- 	return true;
+    public boolean moveOk(int move) {
+ 	    //return ( move>=0 && move <=8 && board[move/3 ][ move%3 ] == EMPTY );
+ 	    return true;
     }
     
     // play move
-    public void playMove(int move)
-    {
+    public void playMove(int move) {
 		board[move/3][ move%3] = this.side;
 		if (side==COMPUTER) this.side=HUMAN;  else this.side=COMPUTER;
 	}
