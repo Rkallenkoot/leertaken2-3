@@ -26,7 +26,9 @@ class Tui
         } while (nextGame());
     }
     
-    public static void main( String [ ] args ) { new Tui();}
+    public static void main(String [] args) {
+        new Tui();
+    }
     
     private int move() {
         if (t.computerPlays()) {

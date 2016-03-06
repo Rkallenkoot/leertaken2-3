@@ -1,6 +1,7 @@
 package ttt;
 
 import java.util.Random;
+
 class TicTacToe
 {
 	private static final int HUMAN        = 0; 
@@ -12,39 +13,41 @@ class TicTacToe
 	public  static final int UNCLEAR      = 2;
 	public  static final int COMPUTER_WIN = 3;
 
-	private int [ ] [ ] board = new int[ 3 ][ 3 ];
-    private Random random=new Random();  
-	private int side=random.nextInt(2);  
-	private int position=UNCLEAR;
+	private int [] [] board = new int[3][3];
+
+    private Random random = new Random();
+	private int side = random.nextInt(2);
+	private int position = UNCLEAR;
 	private char computerChar,humanChar;
 
 	// Constructor
-	public TicTacToe( )
-	{
+	public TicTacToe( ) {
 		clearBoard( );
 		initSide();
 	}
 	
-	private void initSide()
-	{
-	    if (this.side==COMPUTER) { computerChar='X'; humanChar='O'; }
-		else                     { computerChar='O'; humanChar='X'; }
+	private void initSide() {
+	    if (this.side==COMPUTER) {
+            computerChar='X';
+            humanChar='O';
+        }
+		else {
+            computerChar='O';
+            humanChar='X';
+        }
     }
     
-    public void setComputerPlays()
-    {
-        this.side=COMPUTER;
+    public void setComputerPlays() {
+        this.side = COMPUTER;
         initSide();
     }
     
-    public void setHumanPlays()
-    {
+    public void setHumanPlays() {
         this.side = HUMAN;
         initSide();
     }
 
-	public boolean computerPlays()
-	{
+	public boolean computerPlays() {
 	    return side == COMPUTER;
 	}
 
@@ -55,7 +58,7 @@ class TicTacToe
     }
     
     // Find optimal move
-	private Best chooseMove( int side ) {
+	private Best chooseMove(int side) {
 		int opp;              // The other side
 		Best reply;           // Opponent's best reply
 		int simpleEval;       // Result of an immediate evaluation
@@ -63,8 +66,9 @@ class TicTacToe
 		int bestColumn = 0;
 		int value;
 
-		if( ( simpleEval = positionValue( ) ) != UNCLEAR )
-			return new Best( simpleEval );
+		if((simpleEval = positionValue()) != UNCLEAR) {
+            return new Best(simpleEval);
+        }
 
 		// TODO: implementeren m.b.v. recursie/backtracking
 	    return null;
@@ -79,15 +83,20 @@ class TicTacToe
     
     // play move
     public void playMove(int move) {
-		board[move/3][ move%3] = this.side;
-		if (side==COMPUTER) this.side=HUMAN;  else this.side=COMPUTER;
+		board[move / 3][ move % 3] = this.side;
+		if (side==COMPUTER) {
+            this.side = HUMAN;
+        }
+        else {
+            this.side = COMPUTER;
+        }
 	}
 
 
 	// Simple supporting routines
 	private void clearBoard( )
 	{
-		//TODO:
+        board = new int[3][3];
 	}
 
 
@@ -98,21 +107,21 @@ class TicTacToe
 	}
 
 	// Returns whether 'side' has won in this position
-	private boolean isAWin( int side )
+	private boolean isAWin(int side)
 	{
 	    //TODO:
 	    return true;
     }
 
 	// Play a move, possibly clearing a square
-	private void place( int row, int column, int piece )
+	private void place(int row, int column, int piece)
 	{
-		board[ row ][ column ] = piece;
+		board[row][column] = piece;
 	}
 
 	private boolean squareIsEmpty( int row, int column )
 	{
-		return board[ row ][ column ] == EMPTY;
+		return board[row][column] == EMPTY;
 	}
 
 	// Compute static value of current position (win, draw, etc.)
@@ -126,36 +135,34 @@ class TicTacToe
 	public String toString()
 	{
 	    //TODO:
-		return "...\n...\n...\n";   
+		return "...\n...\n...\n";
 	}  
 	
-	public boolean gameOver()
-	{
-	    this.position=positionValue();
-	    return this.position!=UNCLEAR;
+	public boolean gameOver() {
+	    this.position = positionValue();
+	    return this.position != UNCLEAR;
     }
     
-    public String winner()
-    {
+    public String winner() {
         if      (this.position==COMPUTER_WIN) return "computer";
         else if (this.position==HUMAN_WIN   ) return "human";
         else                                  return "nobody";
     }
-    
-	
-	private class Best
-    {
-       int row;
-       int column;
-       int val;
 
-       public Best( int v )
-         { this( v, 0, 0 ); }
-      
-       public Best( int v, int r, int c )
-        { val = v; row = r; column = c; }
-    } 
-	
-	
+
+    private class Best {
+        int row;
+        int column;
+        int val;
+
+        public Best( int v ){
+            this( v, 0, 0 );
+        }
+
+        public Best( int v, int r, int c ){
+            val = v; row = r; column = c;
+        }
+    }
+
 }
 
