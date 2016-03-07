@@ -1,4 +1,5 @@
-import cards.Candidate;
+package cards;
+
 
 import java.util.Stack;
 /** the solution is a sequence of cards placed on the board according to the card positions
