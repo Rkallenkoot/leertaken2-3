@@ -11,7 +11,7 @@ public class Tui {
     public Tui() {
         do {
             System.out.println("*** new Game ***\n");
-            t=new TicTacToe();
+            t = new TicTacToe();
             if (t.computerPlays()) System.out.println("I start:\n");
             else                   System.out.println("You start:\n");
             while (!t.gameOver())

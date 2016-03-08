@@ -53,9 +53,9 @@ public class TicTacToe
 
 	public int chooseMove() {
 	    Best best = chooseMove(COMPUTER);
-	    return best.row*3+best.column;
+	    return best.row * 3 + best.column;
     }
-    
+
     // Find optimal move
 	private Best chooseMove(int side) {
 		int opp = side == COMPUTER ? HUMAN : COMPUTER; // The other side
@@ -65,13 +65,13 @@ public class TicTacToe
 		int bestRow = 0;
 		int bestColumn = 0;
 
-		int value = side  == COMPUTER ? COMPUTER_WIN : HUMAN_WIN;
+		int value = side  == COMPUTER ? HUMAN_WIN: COMPUTER_WIN;
 
 		if((simpleEval = positionValue()) != UNCLEAR) {
             return new Best(simpleEval);
         }
 
-        for (int y = 0; y < checkBoard.length; y++) {
+        for (int y = 0; y < checkBoard[0].length; y++) {
             for (int x = 0; x < checkBoard[1].length; x++) {
                 if(!squareIsEmpty(x, y) || !moveOk(x,y)){
                     // Continue if square is not not empty or move not Ok
@@ -80,7 +80,7 @@ public class TicTacToe
                 }
                 place(x,y, side);
                 reply = chooseMove(opp);
-                if(reply.val < value){
+                if(side == COMPUTER ? reply.val > value : reply.val < value){
                     value = reply.val;
                     bestRow = x;
                     bestColumn = y;
@@ -89,8 +89,7 @@ public class TicTacToe
             }
         }
 
-
-	    return new Best(value, bestRow, bestColumn);
+        return new Best(value, bestRow, bestColumn);
     }
 
    
@@ -120,12 +119,12 @@ public class TicTacToe
 
 	// Simple supporting routines
 	private void clearBoard( ) {
-		for (int x = 0; x < board.length; x++) {
-			for (int y = 0; y < board.length; y++) {
-				board[y][x] = EMPTY;
-			}
-		}
-	}
+        for (int x = 0; x < board.length; x++) {
+            for (int y = 0; y < board.length; y++) {
+                board[y][x] = EMPTY;
+            }
+        }
+    }
 
 
 	private boolean boardIsFull() {
@@ -176,7 +175,7 @@ public class TicTacToe
 	}
 
     private int getPlace(int move){
-        return board[move /3][move % 3];
+        return board[move / 3][move % 3];
     }
 
     // TODO: 3/8/2016 out of bound array exception? - Roelof

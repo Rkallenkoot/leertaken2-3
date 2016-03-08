@@ -99,7 +99,7 @@ public class Solution extends Stack<Candidate>
     }
 
     public boolean complete() {
-        return this.size() == 8;
+        return this.size() == 8 && isCorrect();
     }
 
     public void show()
@@ -131,7 +131,7 @@ public class Solution extends Stack<Candidate>
      * @return true if all checks are correct.
      */
     // uses methods borderCard and mustBeAdjacent to
-    public boolean isCorrect() {
+    private boolean isCorrect() {
         for (int i = 0; i < this.row.length; i++) {
             int row = this.row[i];
             int col = this.column[i];

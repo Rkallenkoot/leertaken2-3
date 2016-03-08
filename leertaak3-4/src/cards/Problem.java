@@ -15,7 +15,7 @@ public class Problem {
 
                 solution.record(candidates.remove(index)); //move candidate to solution
 
-                if (solution.complete() && solution.isCorrect()) {
+                if (solution.complete()) {
                     solution.show();
                 }
                 else {solve();
