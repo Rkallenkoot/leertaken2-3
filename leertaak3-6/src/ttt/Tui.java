@@ -4,8 +4,9 @@ import java.util.*;
 /*
  * Textual User Interface
  */
-public class Tui {
-    private Scanner reader = new Scanner(System.in);
+class Tui
+{
+    private Scanner reader      = new Scanner(System.in);
     private TicTacToe t; 
  
     public Tui() {
@@ -30,6 +31,10 @@ public class Tui {
             System.out.println("Game over " + t.winner() + " wins");
         } while (nextGame());
 
+    }
+    
+    public static void main(String [] args) {
+        new Tui();
     }
     
     private int move() {
@@ -57,17 +62,12 @@ public class Tui {
         Character yn;
         do {
             System.out.print("next Game? enter Y/N: ");
-            yn = (reader.next()).charAt(0);
+            yn=(reader.next()).charAt(0);
             System.out.println(""+yn);
         } 
-        while  (!(yn == 'Y' || yn == 'y' || yn == 'N' || yn == 'n'));
-        return yn == 'Y'|| yn == 'y';
+        while  (!(yn=='Y' || yn=='y' || yn=='N' || yn=='n'));
+        return yn=='Y'|| yn=='y';
     }
-
-    public static void main(String [] args) {
-        new Tui();
-    }
-
 }
 
 

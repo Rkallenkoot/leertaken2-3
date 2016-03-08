@@ -1,5 +1,4 @@
-package cards;
-
+import cards.Candidate;
 
 import java.util.Stack;
 /** the solution is a sequence of cards placed on the board according to the card positions
@@ -22,25 +21,32 @@ public class Solution extends Stack<Candidate>
     private int[] column = { 2, 0, 1, 2, 1, 2, 3, 2 };
 
     //
+    // array with adjacent card positions lower than the card that is placed
+    //                        0   1   2       3    4       5    6   7
+    //int [] [] adjacent  = { {}, {}, {1}, {0,2}, {2},  {3,4}, {5},{5}  };
+    //
+    // array with all adjacent card positions
+    //                         0    1        2        3      4          5     6   7
+    //int [] [] adjacent  = { {3}, {2}, {1,3,4}, {0,2,5}, {2,5},  {3,4,6,7}, {5},{5}  };
+    //
     // array with positions to check for bordering
     //
     //  indices cards that must be checked.
     //  e.g. when the 5th card is placed the cards 3&4 can be checked
     //                 0   1  2   3   4     5   6    7
-    int[][] check = {{},{},{1},{0},{2},{3,4},{6},{5,7}};
+    int [] [] check = {{},{},{1},{0},{2},{3,4},{6},{5,7}};
 
 
     public Solution(){
-
     }
 
 
     // Checks whether a candidate with card CardChar is in
     // an adjacent position of the board position (row, column)
-    // @param row, col, candidate
+    // @param row, column, candidate
     // @return Boolean indicating if cardChar is found.
     // can be used in the methods fits and isCorrect
-    private boolean bordersCard(int row, int col, char cardChar){
+    private boolean bordersCard(int row, int column, char cardChar){
         // Check top neighbouring field
         if(row > 0){
             Candidate top = board[row - 1][col];
@@ -91,7 +97,8 @@ public class Solution extends Stack<Candidate>
         return true;
     }
 
-    public void record(Candidate candidate) {
+    public void record(Candidate candidate)
+    {
         int i=this.size(); // i= index in this stack of next for the next candidate
         board [row[i]] [column[i]] = candidate; //x=row, y=column
         this.push(candidate);
@@ -107,14 +114,16 @@ public class Solution extends Stack<Candidate>
         System.out.println(this);
     }
 
-    public Candidate eraseRecording() {
+    public Candidate eraseRecording()
+    {
         int i=this.size()-1;           // i= index of the candidate that is removed from this Stack;
         board[row[i]][column[i]]=null; // remove candidate from board
         return this.pop();
     }
 
     // can be used in method isCorrect
-    private char mustBeAdjacentTo(char card) {
+    private char mustBeAdjacentTo(char card)
+    {
         if (card=='A') return 'K';
         if (card=='K') return 'Q';
         if (card=='Q') return 'J';
