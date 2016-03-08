@@ -73,7 +73,7 @@ public class Main {
                 // VERY VERY IMP: This is same as "including the last element" which is represented in DP
                 // if the column[ sum is represented in column of the matrix i.e this sum exist] > = sum-a[last_index]
                 // then decrease the sum
-                if(j > =a[i - 1])   // i.e sum >= array[last index element]. If it is true then include this last element by
+                if(j >= a[i - 1])   // i.e sum >= array[last index element]. If it is true then include this last element by
                     // deducting it from the total sum
                     dp[i][j] = dp[i][j] || dp[i-1][j-a[i-1]];  // VERY VERY IMP NOTE: Here dp[i][j] on R.H.S represent
                 // dp[i-1][j] which we have assigned in the previous step
