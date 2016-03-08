@@ -9,21 +9,28 @@ class Tui
     private Scanner reader      = new Scanner(System.in);
     private TicTacToe t; 
  
-    public Tui()
-    {
-        do
-        {
+    public Tui() {
+        do {
+
             System.out.println("*** new Game ***\n");
-            t=new TicTacToe();
-            if (t.computerPlays()) System.out.println("I start:\n");
-            else                   System.out.println("You start:\n");
-            while (!t.gameOver())
-            {
+
+            t = new TicTacToe();
+
+            if (t.computerPlays()){
+                System.out.println("I start:\n");
+            }
+            else {
+                System.out.println("You start:\n");
+            }
+
+            while (!t.gameOver()) {
                t.playMove(move());
                System.out.println(t);
             }
+
             System.out.println("Game over " + t.winner() + " wins");
         } while (nextGame());
+
     }
     
     public static void main(String [] args) {

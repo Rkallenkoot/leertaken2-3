@@ -47,8 +47,37 @@ public class Solution extends Stack<Candidate>
     // @return Boolean indicating if cardChar is found.
     // can be used in the methods fits and isCorrect
     private boolean bordersCard(int row, int column, char cardChar){
-        //TODO
-        return true;
+        // Check top neighbouring field
+        if(row > 0){
+            Candidate top = board[row - 1][col];
+            if(top != null && top.getCardChar() == cardChar){
+                return true;
+            }
+        }
+        // Check left neighbouring field
+        if(col > 0){
+            Candidate right = board[row][col - 1];
+            if(right != null && right.getCardChar() == cardChar){
+                return true;
+            }
+        }
+
+        // Check bottom neighbouring field
+        if(row < board[0].length - 1){
+            Candidate bottom = board[row + 1][col];
+            if(bottom != null && bottom.getCardChar() == cardChar){
+                return true;
+            }
+        }
+
+        // Check left neighbouring field
+        if(col < board[1].length - 1){
+            Candidate left = board[row][col + 1];
+            if(left != null && left.getCardChar() == cardChar){
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -60,7 +89,11 @@ public class Solution extends Stack<Candidate>
      * next free position.
      */
     public boolean fits(Candidate candidate){
-        //TODO
+        int index = this.size();
+
+        if(bordersCard(row[index], column[index], candidate.getCardChar())){
+            return false;
+        }
         return true;
     }
 
@@ -72,9 +105,8 @@ public class Solution extends Stack<Candidate>
 
     }
 
-    public boolean complete()
-    {
-        return this.size()==8;
+    public boolean complete() {
+        return this.size() == 8 && isCorrect();
     }
 
     public void show()
@@ -109,7 +141,18 @@ public class Solution extends Stack<Candidate>
      */
     // uses methods borderCard and mustBeAdjacent to
     private boolean isCorrect() {
-        //TODO
+        for (int i = 0; i < this.row.length; i++) {
+            int row = this.row[i];
+            int col = this.column[i];
+
+            Candidate candidate = board[row][col];
+            char mustBeAdjacentChar = mustBeAdjacentTo(candidate.getCardChar());
+            if(candidate != null && mustBeAdjacentChar != '?') {
+                if(!bordersCard(row, col, mustBeAdjacentChar)){
+                    return false;
+                }
+            }
+        }
         return true;
     }
 
@@ -118,8 +161,30 @@ public class Solution extends Stack<Candidate>
      * @return a representation of the solution on the board
      */
     public String toString(){
-        //TODO
-        return "";
+        StringBuilder output = new StringBuilder();
+        for(int y = 0; y < board[0].length; y++) {
+            for(int x = 0; x < board[1].length; x++) {
+                Candidate candidate = board[y][x];
+                // Wel een candidate
+                if(candidate != null) {
+                    output.append("|").append(candidate.getCardChar());
+                    if(x == board[1].length - 1 || board[y][x + 1] == null) {
+                        output.append("|");
+                    }
+                }
+                // Geen candidate
+                else {
+                    if(x == board[1].length - 1){
+                        output.append(" | ");
+                    } else {
+                        output.append("| ");
+                    }
+                }
+            }
+
+            output.append("\n");
+        }
+        return output.toString();
     }
 
 }
