@@ -2,7 +2,7 @@ package ttt;
 
 import java.util.Random;
 
-class TicTacToe
+public class TicTacToe
 {
 	private static final int HUMAN        = 0; 
 	private static final int COMPUTER     = 1; 
@@ -13,7 +13,7 @@ class TicTacToe
 	public  static final int UNCLEAR      = 2;
 	public  static final int COMPUTER_WIN = 3;
 
-	private int [] [] board = new int[3][3];
+	private int[][] board = new int[3][3];
 
     private Random random = new Random();
 	private int side = random.nextInt(2);
@@ -27,13 +27,13 @@ class TicTacToe
 	}
 	
 	private void initSide() {
-	    if (this.side==COMPUTER) {
-            computerChar='X';
-            humanChar='O';
+	    if (this.side == COMPUTER) {
+            computerChar = 'X';
+            humanChar = 'O';
         }
 		else {
-            computerChar='O';
-            humanChar='X';
+            computerChar = 'O';
+            humanChar = 'X';
         }
     }
     
@@ -96,7 +96,11 @@ class TicTacToe
 	// Simple supporting routines
 	private void clearBoard( )
 	{
-        board = new int[3][3];
+		for (int x = 0; x < board.length; x++) {
+			for (int y = 0; y < board.length; y++) {
+				board[y][x] = EMPTY;
+			}
+		}
 	}
 
 

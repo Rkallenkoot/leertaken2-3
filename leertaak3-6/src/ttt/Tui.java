@@ -4,15 +4,12 @@ import java.util.*;
 /*
  * Textual User Interface
  */
-class Tui
-{
-    private Scanner reader      = new Scanner(System.in);
+public class Tui {
+    private Scanner reader = new Scanner(System.in);
     private TicTacToe t; 
  
-    public Tui()
-    {
-        do
-        {
+    public Tui() {
+        do {
             System.out.println("*** new Game ***\n");
             t=new TicTacToe();
             if (t.computerPlays()) System.out.println("I start:\n");
@@ -24,10 +21,6 @@ class Tui
             }
             System.out.println("Game over " + t.winner() + " wins");
         } while (nextGame());
-    }
-    
-    public static void main(String [] args) {
-        new Tui();
     }
     
     private int move() {
@@ -55,12 +48,17 @@ class Tui
         Character yn;
         do {
             System.out.print("next Game? enter Y/N: ");
-            yn=(reader.next()).charAt(0);
+            yn = (reader.next()).charAt(0);
             System.out.println(""+yn);
         } 
-        while  (!(yn=='Y' || yn=='y' || yn=='N' || yn=='n'));
-        return yn=='Y'|| yn=='y';
+        while  (!(yn == 'Y' || yn == 'y' || yn == 'N' || yn == 'n'));
+        return yn == 'Y'|| yn == 'y';
     }
+
+    public static void main(String [] args) {
+        new Tui();
+    }
+
 }
 
 
