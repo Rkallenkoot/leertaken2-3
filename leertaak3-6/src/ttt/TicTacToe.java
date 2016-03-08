@@ -4,14 +4,14 @@ import java.util.Random;
 
 public class TicTacToe
 {
-	private static final int HUMAN        = 0; 
-	private static final int COMPUTER     = 1; 
-	public  static final int EMPTY        = 2;
+	public static final int HUMAN        = 0;
+	public static final int COMPUTER     = 1;
+	public static final int EMPTY        = 2;
 
-	public  static final int HUMAN_WIN    = 0;
-	public  static final int DRAW         = 1;
-	public  static final int UNCLEAR      = 2;
-	public  static final int COMPUTER_WIN = 3;
+	public static final int HUMAN_WIN    = 0;
+	public static final int DRAW         = 1;
+	public static final int UNCLEAR      = 2;
+	public static final int COMPUTER_WIN = 3;
 
 	private int[][] board = new int[3][3];
 
@@ -141,7 +141,7 @@ public class TicTacToe
 	}
 
 	// Returns whether 'side' has won in this position
-	private boolean isAWin(int side) {
+	public boolean isAWin(int side) {
         // all winning positions
         int [][] winningPositions = {
                 { 0, 1, 2 },
@@ -185,8 +185,7 @@ public class TicTacToe
 	}
 
 	// Compute static value of current position (win, draw, etc.)
-	private int positionValue( )
-	{
+	public int positionValue( ) {
 
         if(isAWin(HUMAN)) {
             return HUMAN_WIN;
@@ -202,8 +201,7 @@ public class TicTacToe
 	}
 	
 	
-	public String toString()
-	{
+	public String toString() {
         StringBuilder output = new StringBuilder();
 
         for (int x = 0; x < board[0].length; x++) {
