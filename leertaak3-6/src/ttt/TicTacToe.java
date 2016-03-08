@@ -77,8 +77,8 @@ public class TicTacToe
    
     //check if move ok
     public boolean moveOk(int move) {
- 	    //return ( move>=0 && move <=8 && board[move/3 ][ move%3 ] == EMPTY );
- 	    return true;
+ 	    return (move >= 0 && move <=8 && board[move / 3][move % 3] == EMPTY);
+
     }
     
     // play move
