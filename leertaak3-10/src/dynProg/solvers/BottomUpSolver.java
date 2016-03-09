@@ -14,7 +14,6 @@ public class BottomUpSolver implements Solver {
         // if the length of the array is variable (and sum is 0) then fill TRUE, since the SUM=0
         for(int row = 0;row < dp.length; row++){
             dp[row][0] = true; // NOTE: dp[length=VARIABLE][sum=0], thus we satisfy the condition where length is VARIABLE
-
         }
 
         // if the SUM is variable and length is 0 then FALSE, since (sum=variable && length=0)
@@ -28,10 +27,20 @@ public class BottomUpSolver implements Solver {
                 if(j >= numbers[i - 1]){
                     dp[i][j] = dp[i][j] || dp[i-1][j - numbers[i - 1]];
                 }
-
+            }
+            if(dp[i-1][sum] == true){
+                return true;
             }
         }
 
+        StringBuilder output = new StringBuilder();
+        for (int x = 0; x < dp.length; x++) {
+            for (int y = 0; y < dp[0].length; y++) {
+                output.append(dp[x][y]).append('\t');
+            }
+            output.append('\n');
+        }
+        System.out.println(output.toString());
         return dp[numbers.length][sum];
     }
 }

@@ -4,9 +4,6 @@ import dynProg.Solver;
 
 import java.util.Arrays;
 
-/**
- * Created by Iris
- */
 public class RecursiveSolver implements Solver {
 
     public boolean solve(int[] set, int sum){
