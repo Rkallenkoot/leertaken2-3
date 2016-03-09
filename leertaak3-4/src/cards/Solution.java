@@ -1,3 +1,5 @@
+package cards;
+
 import cards.Candidate;
 
 import java.util.Stack;
@@ -46,7 +48,7 @@ public class Solution extends Stack<Candidate>
     // @param row, column, candidate
     // @return Boolean indicating if cardChar is found.
     // can be used in the methods fits and isCorrect
-    private boolean bordersCard(int row, int column, char cardChar){
+    private boolean bordersCard(int row, int col, char cardChar){
         // Check top neighbouring field
         if(row > 0){
             Candidate top = board[row - 1][col];
