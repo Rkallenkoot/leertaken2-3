@@ -9,24 +9,22 @@ import java.util.Arrays;
  */
 public class RecursiveSolver implements Solver {
 
-    @Override
-    public boolean solve(int[] numbers, int sum) {
+    public boolean solve(int[] set, int sum){
+        // base case
+        // sum 0 is altijd te maken?
         if(sum == 0){
             return true;
         }
-        int sumOfNumbers = 0;
-
-        while(numbers.length > 0){
-            for(int i = 0; i < numbers.length; i++){
-                sumOfNumbers += numbers[i];
-            }
-            if(sumOfNumbers == sum){
-                return true;
-            }
-            solve(Arrays.copyOf(numbers, numbers.length-1), sum);
+        // Als n 0 is en de sum is nog niet gevonden
+        if(set.length == 0){
+            return false;
         }
 
-        return false;
+        if(set[set.length-1] > sum){
+            return solve(Arrays.copyOf(set, set.length-1), sum);
+        }
+        int[] newSet = Arrays.copyOf(set, set.length -1);
+        return solve(newSet, sum - set[set.length-1]) || solve(newSet, sum);
     }
 
 }
