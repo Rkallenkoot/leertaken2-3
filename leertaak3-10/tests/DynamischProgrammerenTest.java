@@ -1,6 +1,7 @@
 
 import dynProg.Solver;
 import dynProg.solvers.BottomUpSolver;
+import dynProg.solvers.TopDownSolver;
 import org.junit.*;
 
 
@@ -28,8 +29,8 @@ public class DynamischProgrammerenTest {
 	
 	@Test
 	public void testTopDown(){
-		//solver = new TopDownSolver();
-		//doTest();
+		solver = new TopDownSolver();
+		doTest();
 	}
 	
 	private void doTest(){

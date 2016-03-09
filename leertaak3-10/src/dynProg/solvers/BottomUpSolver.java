@@ -33,14 +33,14 @@ public class BottomUpSolver implements Solver {
             }
         }
 
-        StringBuilder output = new StringBuilder();
-        for (int x = 0; x < dp.length; x++) {
-            for (int y = 0; y < dp[0].length; y++) {
-                output.append(dp[x][y]).append('\t');
-            }
-            output.append('\n');
-        }
-        System.out.println(output.toString());
+//        StringBuilder output = new StringBuilder();
+//        for (int x = 0; x < dp.length; x++) {
+//            for (int y = 0; y < dp[0].length; y++) {
+//                output.append(dp[x][y]).append('\t');
+//            }
+//            output.append('\n');
+//        }
+//        System.out.println(output.toString());
         return dp[numbers.length][sum];
     }
 }
