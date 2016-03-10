@@ -1,9 +1,6 @@
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created by roelof on 10/03/2016.
- */
 public class Main {
 
     public static void main(String[] args) {
@@ -15,4 +12,5 @@ public class Main {
 
         System.out.println("Deposit Task\t\tWithdraw Task\t\tBalance");
     }
+
 }

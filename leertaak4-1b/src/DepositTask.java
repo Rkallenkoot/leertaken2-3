@@ -1,6 +1,3 @@
-/**
- * Created by roelof on 10/03/2016.
- */
 public class DepositTask implements Runnable {
 
     private Account account;
