@@ -7,7 +7,16 @@ import java.util.concurrent.Executors;
 public class Main {
 
     public static void main(String[] args) {
-        thousandThreads();
+//        thousandThreads();
+        eersteOpgave();
+    }
+
+    private static void eersteOpgave() {
+        for (int i = 1; i <= 4; i++) {
+            Runnable task = new lockControl.PrintCharTask(Character.forDigit(i, 10), 2);
+            Thread thread = new Thread(task);
+            thread.start();
+        }
     }
 
     private static void thousandThreads(){
