@@ -3,15 +3,19 @@
  */
 public class SumWrapper {
 
+    private static final Object object = new Object();
+
     private int sum;
 
     public SumWrapper(int sum) {
         this.sum = sum;
     }
 
-    public synchronized void increment(){
-        System.out.println(sum);
-        sum++;
+    public void increment(){
+        synchronized (object){
+            System.out.println(sum);
+            sum++;
+        }
     }
 
     public int getSum() {

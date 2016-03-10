@@ -1,9 +1,6 @@
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created by roelof on 10/03/2016.
- */
 public class Main {
 
     public static void main(String[] args) {
@@ -13,10 +10,13 @@ public class Main {
 
     private static void eersteOpgave() {
         for (int i = 1; i <= 4; i++) {
-            Runnable task = new lockControl.PrintCharTask(Character.forDigit(i, 10), 2);
+            int nextThread = i == 4 ? 4 : i+1;
+            lockControl.PrintCharTask task = new lockControl.PrintCharTask(Character.forDigit(i, 10), 2, i);
+            task.NEXT_THREAD = nextThread;
             Thread thread = new Thread(task);
             thread.start();
         }
+
     }
 
     private static void thousandThreads(){
