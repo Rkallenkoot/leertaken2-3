@@ -32,13 +32,15 @@ public class PrintCharTask implements Runnable {
         lock.lock();
         try {
             while(threadNumber < NEXT_THREAD){
-                System.out.println("Wait for bami: " + threadNumber + " nextThread: " + NEXT_THREAD);
-                ready.await();
+                // Don't infinitely Await
+                // Else signalAll wont ever be triggered.
+                ready.awaitNanos(1000);
             }
             for (int i = 0; i < count; i++) {
                 System.out.println(printChar);
             }
-            PrintCharTask.NEXT_THREAD = threadNumber-1;
+            PrintCharTask.NEXT_THREAD = this.threadNumber-1;
+            System.out.println("signalled from thread: " + threadNumber);
             ready.signalAll();
         } catch (InterruptedException e) {
             e.printStackTrace();
