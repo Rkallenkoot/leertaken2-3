@@ -176,10 +176,8 @@ public class Laser extends Device {
 			this.commands.add("GETMEASURES");
 			this.executingCommand = true;
 		} else if (command.equalsIgnoreCase("GETMEASURES")) {
-			LaserMeasurement measure;
 			String measures = "SCAN";
-			for (LaserMeasurement scanMeasure : scanMeasurements) {
-				measure = scanMeasure;
+			for (LaserMeasurement measure: scanMeasurements) {
 				measures += " d=" + measure.distance + " t=" + measure.direction;
 			}
 			writeOut(measures);

@@ -58,74 +58,59 @@ public class MobileRobotAI implements Runnable {
 //      ases where a variable value is never used after its assignment, i.e.:
 				System.out.println("intelligence running");
 
-//                for (int i = 0; i < 360; i++) {
-//                    robot.sendCommand(String.format("P1.ROTATERIGHT 1", i));
-//                    result = input.readLine();
-//                }
-
-
-                // SCANNEN
-                // WAARNEMEN
-                for (int i = 0; i < 10000000; i++) {
-                    updatePosition();
-
-                    // Denken
-                    robot.sendCommand("L1.SCAN");
-                    result = input.readLine();
-                    parseMeasures(result, measures);
-                    map.drawLaserScan(position, measures);
-
-                    double[] newPosition = zoekverstepunt(measures);
-                    if (newPosition[0] != position[0] || newPosition[1] != position[1]) {
-                        // nog meer denken
-                        // hier logica om te berekenen hoe we moeten moven
-
-                        // Do the Y
-                        double yDiff = position[1] - newPosition[1];
-
-                        if (yDiff > 0) {
-                            // positive = WEST
-                            robot.sendCommand("P1.ROTATELEFT 90");
-                            result = input.readLine();
-                            robot.sendCommand(String.format("P1.MOVEFW %s", yDiff));
-                            result = input.readLine();
-                        } else if (yDiff < 0) {
-                            // negative = EAST
-                            robot.sendCommand("P1.ROTATERIGHT 90");
-                            result = input.readLine();
-                            robot.sendCommand(String.format("P1.MOVEFW %s", Math.abs(yDiff)));
-                            result = input.readLine();
-                        }
-
-
-                        // Do the X
-                        double xDiff = position[0] - newPosition[0];
-                        if (xDiff > 0) {
-                            // positive == NORTH
-                            robot.sendCommand(String.format("P1.MOVEFW %s", xDiff));
-                            result = input.readLine();
-                        } else if (xDiff < 0) {
-                            // negative == SOUTH
-                            robot.sendCommand(String.format("P1.MOVEBW %s", Math.abs(xDiff)));
-                            result = input.readLine();
-                        }
-
-                        // doen
-                    } else {
-                        robot.sendCommand("P1.MOVEFW 10");
-                        result = input.readLine();
-                    }
-                    // repeat
-
-                }
-
                 updatePosition();
 
-				robot.sendCommand("L1.SCAN");
-				result = input.readLine();
-				parseMeasures(result, measures);
-				map.drawLaserScan(position, measures);
-				this.running = false;
+                // Denken
+                robot.sendCommand("L1.DETECT");
+                result = input.readLine();
+
+                robot.sendCommand("L1.SCAN");
+                parseMeasures(result, measures);
+                map.drawLaserScan(position, measures);
+
+                running = false;
+                double[] newPosition = zoekverstepunt(measures);
+                if (newPosition[0] != position[0] || newPosition[1] != position[1]) {
+                    // nog meer denken
+                    // hier logica om te berekenen hoe we moeten moven
+
+                    // Do the Y
+                    double yDiff = position[1] - newPosition[1];
+
+                    if (yDiff > 0) {
+                        // positive = WEST
+                        robot.sendCommand("P1.ROTATELEFT 90");
+                        result = input.readLine();
+                        robot.sendCommand(String.format("P1.MOVEFW %s", yDiff));
+                        result = input.readLine();
+                    } else if (yDiff < 0) {
+                        // negative = EAST
+                        robot.sendCommand("P1.ROTATERIGHT 90");
+                        result = input.readLine();
+                        robot.sendCommand(String.format("P1.MOVEFW %s", Math.abs(yDiff)));
+                        result = input.readLine();
+                    }
+
+
+                    // Do the X
+                    double xDiff = position[0] - newPosition[0];
+                    if (xDiff > 0) {
+                        // positive == NORTH
+                        robot.sendCommand(String.format("P1.MOVEFW %s", xDiff));
+                        result = input.readLine();
+                    } else if (xDiff < 0) {
+                        // negative == SOUTH
+                        robot.sendCommand(String.format("P1.MOVEBW %s", Math.abs(xDiff)));
+                        result = input.readLine();
+                    }
+
+                    // doen
+                } else {
+                    robot.sendCommand("P1.MOVEFW 10");
+                    result = input.readLine();
+                }
+                // repeat
+
 			} catch (IOException ioe) {
 				System.err.println("execution stopped");
 				running = false;
@@ -133,12 +118,6 @@ public class MobileRobotAI implements Runnable {
 		}
 
 	}
-
-    private boolean zoekPunt(double[] measures) {
-        updatePosition();
-
-        return false;
-    }
 
     /**
      * @param measures
@@ -173,41 +152,10 @@ public class MobileRobotAI implements Runnable {
         return obstaclePosition;
     }
 
-    private double[] zoekdichtstepunt(double[] measures) {
-        updatePosition();
-        double obstaclePosition[] = position;
-        double minDistance = 100;
-        int direction = -1;
-        // Zoek het verste punt
-        for (int i = 0; i < measures.length; i++) {
-            if (measures[i] < 100 && measures[i] < minDistance) {
-                // positie gevonden
-                // Check of het een obstacle is
-                // update dan de list
-                minDistance = measures[i];
-                direction = i;
-            }
-        }
-        if (minDistance != 100 && direction != -1) {
-            // bereken de position van het opstacle
 
-            obstaclePosition[0] = 0;
-            obstaclePosition[1] = 0;
-            obstaclePosition[2] = position[2];
-
-        }
-        return obstaclePosition;
-    }
-
-    private void updatePosition() {
+    private void updatePosition() throws IOException {
         robot.sendCommand("R1.GETPOS");
-        String value = null;
-        try {
-            value = input.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        String value = input.readLine();
 
         int indexInit;
         int indexEnd;
