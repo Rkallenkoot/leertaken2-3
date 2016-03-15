@@ -3,7 +3,7 @@ package model.robot;
 import model.virtualmap.OccupancyMap;
 
 import java.io.*;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Title    :   The Mobile Robot Explorer Simulation Environment v2.0
@@ -18,11 +18,16 @@ import java.util.StringTokenizer;
 
 public class MobileRobotAI implements Runnable {
 
-	private final OccupancyMap map;
+    private static final int MAX_STEP_COUNT = 10;
+
+    private final OccupancyMap map;
 	private final MobileRobot robot;
 
     private double position[] = new double[3];
     private double measures[] = new double[360];
+
+    private int stepCount;
+
 
     private PipedInputStream pipeIn;
     private BufferedReader input;
@@ -33,6 +38,8 @@ public class MobileRobotAI implements Runnable {
 	public MobileRobotAI(MobileRobot robot, OccupancyMap map) {
 		this.map = map;
 		this.robot = robot;
+        stepCount = 0;
+
         try {
             pipeIn = new PipedInputStream();
             input = new BufferedReader(new InputStreamReader(pipeIn));
@@ -52,10 +59,19 @@ public class MobileRobotAI implements Runnable {
 	public void run() {
 		String result;
 		this.running = true;
+
+        double startPosition[] = new double[]{-1, -1, 0};
+
         System.out.println("intelligence running");
+        boolean turnedRight = false;
 		while (running) {
 			try {
                 updatePosition();
+                if(startPosition[0] == -1 && startPosition[1] == -1){
+                    // set initial starting position
+                    startPosition = position.clone();
+                }
+                boolean turning = false;
 
                 // Denken
                 robot.sendCommand("L1.SCAN");
@@ -65,11 +81,13 @@ public class MobileRobotAI implements Runnable {
 
                 double forward = measures[0];
                 double right = measures[90];
+                double southEast = measures[105];
 
+                System.out.println("Right:" + right);
+                System.out.println("southEast: " + southEast);
+                System.out.println("Forward: " + forward);
 
                 if(right < 100){
-                    System.out.println("Right:" + right);
-                    System.out.println("Forward: " + forward);
 
                     if(forward < 30){
                         // 45 graden naar links
@@ -83,12 +101,12 @@ public class MobileRobotAI implements Runnable {
                         // 45 graden naar links
                         robot.sendCommand("P1.ROTATELEFT 45");
                         result = input.readLine();
-
-                        // 10 forward
-                        robot.sendCommand("P1.MOVEFW 5");
-                        result = input.readLine();
+                        turning = true;
                     }
-                    if(right > 30){
+                    if(!turning && !turnedRight && right > 30){
+                        // TODO: Deze kan subtielier
+
+
                         // rotate 90 naar rechts
                         robot.sendCommand("P1.ROTATERIGHT 90");
                         result = input.readLine();
@@ -101,8 +119,8 @@ public class MobileRobotAI implements Runnable {
                         robot.sendCommand("P1.ROTATELEFT 90");
                         result = input.readLine();
                     }
-                    if(right <= 20 ){
-                        // Hier gewoon schuin gaan
+                    if(right < 20 ){
+                        // TODO: deze met 1 schijne lijn doen
                         for (int i = 0; i < 9; i++) {
 
                             // rotate 90 naar links
@@ -119,8 +137,11 @@ public class MobileRobotAI implements Runnable {
 
 
                     }
+
                     robot.sendCommand("P1.MOVEFW 10");
                     result = input.readLine();
+
+                    turnedRight = false;
                 } else {
                     // draai 90 rechts
                     robot.sendCommand("P1.ROTATERIGHT 45");
@@ -135,11 +156,40 @@ public class MobileRobotAI implements Runnable {
                     robot.sendCommand("P1.MOVEFW 10");
                     result = input.readLine();
 
-                    robot.sendCommand("P1.ROTATERIGHT 90");
+                    robot.sendCommand("P1.ROTATERIGHT 45");
                     result = input.readLine();
 
                     robot.sendCommand("P1.MOVEFW 10");
                     result = input.readLine();
+
+                    robot.sendCommand("P1.ROTATERIGHT 45");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.MOVEFW 10");
+                    result = input.readLine();
+
+
+                    turnedRight = true; // Na een rechterturn
+                    // moet hij niet meer proberen dichterbij de kant te gaan
+                    // stukje naar voren
+                    robot.sendCommand("P1.MOVEFW 10");
+                    result = input.readLine();
+
+                }
+                updatePosition();
+                stepCount++;
+
+                if(stepCount > MAX_STEP_COUNT && Math.abs(position[0]-startPosition[0]) < 30 && Math.abs(position[1]-startPosition[1]) < 30){
+                    System.out.println("Done exploring");
+                    robot.sendCommand("P1.MOVEFW 5");
+                    result = input.readLine();
+
+                    for (int i = 0; i < 10; i++) {
+                        robot.sendCommand("P1.ROTATERIGHT 360");
+                        result = input.readLine();
+                    }
+
+                    running = false;
                 }
                 // repeat
 
@@ -150,39 +200,6 @@ public class MobileRobotAI implements Runnable {
 		}
 
 	}
-
-    /**
-     * @param measures
-     * @return
-     */
-    private double[] zoekverstepunt(double[] measures) {
-        // Initieel gelijk aan die van de robot
-        // indien er geen obstacles zijn gevonden
-        double obstaclePosition[] = position.clone();
-        double maxDistance = -1;
-        int direction = -1;
-        // Zoek het verste punt
-        for (int i = 0; i < measures.length; i++) {
-            if (measures[i] < 100 && measures[i] > maxDistance) {
-                // positie gevonden
-                maxDistance = measures[i];
-                direction = i;
-            }
-        }
-        if (maxDistance != -1 && direction != -1) {
-            double aanliggend = Math.cos(direction) * maxDistance;
-            double overstaand = Math.sin(direction) * maxDistance;
-            System.out.println("Aanliggend: " + aanliggend);
-            System.out.println("Overstaand: " + overstaand);
-
-            // bereken de position van het opstacle
-            obstaclePosition[0] = position[0] + overstaand;
-            obstaclePosition[1] = position[1] + aanliggend;
-            obstaclePosition[2] = position[2];
-
-        }
-        return obstaclePosition;
-    }
 
 
     private void updatePosition() throws IOException {
