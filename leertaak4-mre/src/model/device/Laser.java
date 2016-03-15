@@ -32,19 +32,15 @@ public class Laser extends Device {
 
 	// maximum range
 	private final int range = 100;
-
-	private int orientation = 1;
-
+    private final ArrayList<LaserMeasurement> scanMeasurements;
+    private int orientation = 1;
 	private double rotStep = 1.0;     // one degree
 	private double numSteps = 0;
-
 	// JB: The use of the booleans detect and scan (and Device.running) makes the code very complex
 	// and easy to break. See executeCommand() and nextStep(). This could do with a decent refactoring!
 	private boolean detect;
 	private boolean scan;
-
 	private LaserMeasurement detectMeasure;
-	private final ArrayList<LaserMeasurement> scanMeasurements;
 
 	public Laser(String name, MobileRobot robot, Position localPos, Environment environment) {
 		super(name, robot, localPos, environment);
@@ -164,10 +160,32 @@ public class Laser extends Device {
 			}
 			this.executingCommand = true;
 		} else if (command.equalsIgnoreCase("READ")) {
+            //
+            StringBuilder measures = new StringBuilder();
+            measures.append(String.format("t=%s d=%s",
+                    Double.toString(this.localPosition.getT()), Double.toString(this.read(true))));
+
 			writeOut("t=" + Double.toString(this.localPosition.getT()) + " d=" + Double.toString(this.read(true)));
 			// ??????????????
-		} else if (command.equalsIgnoreCase("SCAN")) {
-			this.rotStep = 1.0;
+        } else if (command.equalsIgnoreCase("PROSCAN")) {
+            this.rotStep = 1.0;
+            this.scanMeasurements.clear();
+            this.numSteps = 90.0 / rotStep;
+
+            double currentDir = this.localPosition.getT();
+            System.out.println("Graden: " + Math.toDegrees(currentDir));
+            if (currentDir >= Math.toRadians(90)) {
+                this.orientation = ANTICLOCKWISE;
+            } else {
+                this.orientation = CLOCKWISE;
+            }
+            this.scan = true;
+
+            // send the list of measures
+            this.commands.add("GETMEASURES");
+            this.executingCommand = true;
+        } else if (command.equalsIgnoreCase("SCAN")) {
+            this.rotStep = 1.0;
 			this.scanMeasurements.clear();
 			this.numSteps = 360.0 / rotStep;
 			this.orientation = CLOCKWISE;
@@ -187,13 +205,13 @@ public class Laser extends Device {
 			if (detectMeasure != null) {
 				writeOut("LASER DETECT d=" + detectMeasure.distance + " t=" + detectMeasure.direction);
 				detectMeasure = null;
-			} else if (localPosition.getT() == Math.toRadians(45.0)) {   // ?????????????
-				// move the laser to the left position
+            } else if (localPosition.getT() == Math.toRadians(45.0)) {
+                // move the laser to the left position
 				commands.add("ROTATETO 315");
 				// repeats this command
 				commands.add("DETECT");
-			} else if (localPosition.getT() == Math.toRadians(315.0)) {  // ??????????????
-				// move the laser to the right position
+            } else if (localPosition.getT() == Math.toRadians(315.0)) {
+                // move the laser to the right position
 				commands.add("ROTATETO 45");
 				// repeats this command
 				commands.add("DETECT");
@@ -231,16 +249,16 @@ public class Laser extends Device {
 			double distance = this.read(true);
 			if (distance > -1.0) {
 				if (detectMeasure == null) {
-					detectMeasure = new LaserMeasurement(distance, localPosition.getT());  // ?????????????
-				} else if (detectMeasure.distance > distance) {
-					detectMeasure.set(distance, localPosition.getT());  // ????????????
-				}
+                    detectMeasure = new LaserMeasurement(distance, localPosition.getT());
+                } else if (detectMeasure.distance > distance) {
+                    detectMeasure.set(distance, localPosition.getT());
+                }
 			}
 		} else if (scan) {
 			double distance = this.read(false);
 			if (distance > -1.0) {
-				scanMeasurements.add(new LaserMeasurement(distance, localPosition.getT()));  // ??????????????
-			}
+                scanMeasurements.add(new LaserMeasurement(distance, localPosition.getT()));
+            }
 		}
 	}
 }
