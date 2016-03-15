@@ -183,7 +183,7 @@ public class Laser extends Device {
 			writeOut(measures);
 		} else if (command.equalsIgnoreCase("DETECT")) {
 			detect = true;
-			rotStep = 8.0;
+			rotStep = 5.0;
 			if (detectMeasure != null) {
 				writeOut("LASER DETECT d=" + detectMeasure.distance + " t=" + detectMeasure.direction);
 				detectMeasure = null;
