@@ -52,60 +52,92 @@ public class MobileRobotAI implements Runnable {
 	public void run() {
 		String result;
 		this.running = true;
+        System.out.println("intelligence running");
 		while (running) {
 			try {
-
-//      ases where a variable value is never used after its assignment, i.e.:
-				System.out.println("intelligence running");
-
                 updatePosition();
 
                 // Denken
-                robot.sendCommand("L1.DETECT");
-                result = input.readLine();
-
                 robot.sendCommand("L1.SCAN");
+                result = input.readLine();
                 parseMeasures(result, measures);
                 map.drawLaserScan(position, measures);
 
-                running = false;
-                double[] newPosition = zoekverstepunt(measures);
-                if (newPosition[0] != position[0] || newPosition[1] != position[1]) {
-                    // nog meer denken
-                    // hier logica om te berekenen hoe we moeten moven
+                double forward = measures[0];
+                double right = measures[90];
 
-                    // Do the Y
-                    double yDiff = position[1] - newPosition[1];
 
-                    if (yDiff > 0) {
-                        // positive = WEST
-                        robot.sendCommand("P1.ROTATELEFT 90");
+                if(right < 100){
+                    System.out.println("Right:" + right);
+                    System.out.println("Forward: " + forward);
+
+                    if(forward < 30){
+                        // 45 graden naar links
+                        robot.sendCommand("P1.ROTATELEFT 45");
                         result = input.readLine();
-                        robot.sendCommand(String.format("P1.MOVEFW %s", yDiff));
+
+                        // 10 forward
+                        robot.sendCommand("P1.MOVEFW 5");
                         result = input.readLine();
-                    } else if (yDiff < 0) {
-                        // negative = EAST
+
+                        // 45 graden naar links
+                        robot.sendCommand("P1.ROTATELEFT 45");
+                        result = input.readLine();
+
+                        // 10 forward
+                        robot.sendCommand("P1.MOVEFW 5");
+                        result = input.readLine();
+                    }
+                    if(right > 30){
+                        // rotate 90 naar rechts
                         robot.sendCommand("P1.ROTATERIGHT 90");
                         result = input.readLine();
-                        robot.sendCommand(String.format("P1.MOVEFW %s", Math.abs(yDiff)));
+
+                        // movefw 20
+                        robot.sendCommand("P1.MOVEFW 10");
+                        result = input.readLine();
+
+                        // rotate 90 links
+                        robot.sendCommand("P1.ROTATELEFT 90");
                         result = input.readLine();
                     }
+                    if(right <= 20 ){
+                        // Hier gewoon schuin gaan
+                        for (int i = 0; i < 9; i++) {
+
+                            // rotate 90 naar links
+                            robot.sendCommand("P1.ROTATELEFT 10");
+                            result = input.readLine();
+                            // movefw 20
+                            robot.sendCommand("P1.MOVEFW 2");
+                            result = input.readLine();
+
+                            // rotate 90 right
+                            robot.sendCommand("P1.ROTATERIGHT 10");
+                            result = input.readLine();
+                        }
 
 
-                    // Do the X
-                    double xDiff = position[0] - newPosition[0];
-                    if (xDiff > 0) {
-                        // positive == NORTH
-                        robot.sendCommand(String.format("P1.MOVEFW %s", xDiff));
-                        result = input.readLine();
-                    } else if (xDiff < 0) {
-                        // negative == SOUTH
-                        robot.sendCommand(String.format("P1.MOVEBW %s", Math.abs(xDiff)));
-                        result = input.readLine();
                     }
-
-                    // doen
+                    robot.sendCommand("P1.MOVEFW 10");
+                    result = input.readLine();
                 } else {
+                    // draai 90 rechts
+                    robot.sendCommand("P1.ROTATERIGHT 45");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.MOVEFW 10");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.ROTATELEFT 45");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.MOVEFW 10");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.ROTATERIGHT 90");
+                    result = input.readLine();
+
                     robot.sendCommand("P1.MOVEFW 10");
                     result = input.readLine();
                 }
@@ -196,7 +228,7 @@ public class MobileRobotAI implements Runnable {
 				}
 				measures[direction] = distance;
 				// Printing out all the degrees and what it encountered.
-				System.out.println("direction = " + direction + " distance = " + distance);
+//				System.out.println("direction = " + direction + " distance = " + distance);
 			}
 		}
 	}
