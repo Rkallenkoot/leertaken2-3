@@ -19,6 +19,7 @@ import java.util.StringTokenizer;
 public class MobileRobotAI implements Runnable {
 
     private static final int MAX_STEP_COUNT = 10;
+    private static final double RIGHT_OFFSET = 25;
 
     private final OccupancyMap map;
 	private final MobileRobot robot;
@@ -72,8 +73,6 @@ public class MobileRobotAI implements Runnable {
                     // set initial starting position
                     startPosition = position.clone();
                 }
-                boolean turning = false;
-
                 // Denken
                 robot.sendCommand("L1.SCAN");
                 result = input.readLine();
@@ -87,25 +86,22 @@ public class MobileRobotAI implements Runnable {
                 double southEast = measures[115];
 
                 System.out.println("Right:" + right);
+                System.out.println("SouthEast: " + southEast);
                 System.out.println("Forward: " + forward);
 
                 if(right < 100){
-
                     if(forward < 30){
-                        // 45 graden naar links
+                        double distance = forward - 20;
                         robot.sendCommand("P1.ROTATELEFT 45");
                         result = input.readLine();
 
-                        // 10 forward
-                        robot.sendCommand("P1.MOVEFW 5");
+                        robot.sendCommand(String.format("P1.MOVEFW %s", distance));
                         result = input.readLine();
 
-                        // 45 graden naar links
                         robot.sendCommand("P1.ROTATELEFT 45");
                         result = input.readLine();
-                        turning = true;
                     }
-                    if (!turning && !turnedRight && right > 25 && southEast > 33) {
+                    if (!turnedRight && right > 25 && southEast > 27) {
                         // TODO: Deze kan subtielier
                         // rotate 90 naar rechts
 //                        robot.sendCommand("P1.ROTATERIGHT 90");
@@ -124,67 +120,66 @@ public class MobileRobotAI implements Runnable {
                         result = input.readLine();
 
                         // movefw 20
-                        robot.sendCommand("P1.MOVEFW 15");
+                        robot.sendCommand("P1.MOVEFW 5");
                         result = input.readLine();
 
                         robot.sendCommand(String.format("P1.ROTATELEFT %s", graden));
                         result = input.readLine();
                     }
-                    if(right < 20 ){
-                        // TODO: deze met 1 schijne lijn doen
-                        for (int i = 0; i < 9; i++) {
-
-                            // rotate 90 naar links
-                            robot.sendCommand("P1.ROTATELEFT 10");
-                            result = input.readLine();
-                            // movefw 20
-                            robot.sendCommand("P1.MOVEFW 2");
-                            result = input.readLine();
-
-                            // rotate 90 right
-                            robot.sendCommand("P1.ROTATERIGHT 10");
-                            result = input.readLine();
-                        }
-                    }
-
-                    robot.sendCommand("P1.MOVEFW 10");
-                    result = input.readLine();
-
-                    turnedRight = false;
-                } else {
-                    if (southEast > 50) {
-                        // draai 90 rechts
-                        robot.sendCommand("P1.ROTATERIGHT 45");
-                        result = input.readLine();
-
-                        robot.sendCommand("P1.MOVEFW 10");
-                        result = input.readLine();
+                    // te dicht bij de muur
+                    if (right < RIGHT_OFFSET) {
+                        double distance = RIGHT_OFFSET - right;
+                        // sinus =(45) * distance = Schuine zijde
+                        double schuin = Math.sin(45) * distance;
 
                         robot.sendCommand("P1.ROTATELEFT 45");
                         result = input.readLine();
 
-                        robot.sendCommand("P1.MOVEFW 10");
+                        robot.sendCommand(String.format("P1.MOVEFW %s", schuin));
                         result = input.readLine();
-
+                        // rotate 90 right
                         robot.sendCommand("P1.ROTATERIGHT 45");
                         result = input.readLine();
-
-                        robot.sendCommand("P1.MOVEFW 10");
-                        result = input.readLine();
-
-                        robot.sendCommand("P1.ROTATERIGHT 45");
-                        result = input.readLine();
-
-                        robot.sendCommand("P1.MOVEFW 10");
-                        result = input.readLine();
-
-                        turnedRight = true; // Na een rechterturn
                     }
+
+                    robot.sendCommand("P1.MOVEFW 15");
+                    result = input.readLine();
+
+                    turnedRight = false;
+                }
+                // Rechterbocht
+                else {
+                    // draai 90 rechts
+                    robot.sendCommand("P1.ROTATERIGHT 45");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.MOVEFW 5");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.ROTATELEFT 45");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.MOVEFW 10");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.ROTATERIGHT 45");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.MOVEFW 5");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.ROTATERIGHT 45");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.MOVEFW 10");
+                    result = input.readLine();
+
+                    turnedRight = true; // Na een rechterturn
                     // moet hij niet meer proberen dichterbij de kant te gaan
                     // stukje naar voren
                     // genoeg ruimte voor ?
                     if (forward - 20 >= 0) {
-                        robot.sendCommand("P1.MOVEFW 30");
+                        robot.sendCommand("P1.MOVEFW 20");
                         result = input.readLine();
                     } else {
                         robot.sendCommand("P1.MOVEFW 10");
