@@ -80,6 +80,7 @@ public class MobileRobotAI implements Runnable {
                 map.drawLaserScan(position, measures);
 
                 double forward = measures[0];
+                double northEast = measures[10];
                 double right = measures[90];
                 double southEast = measures[145];
 
@@ -89,12 +90,22 @@ public class MobileRobotAI implements Runnable {
 
                 if(right < 100){
 
-                    if(forward < 30){
+                    if(forward < 30 || northEast < 20){
                         // 45 graden naar links
-                        robot.sendCommand("P1.ROTATELEFT 90");
+                        robot.sendCommand("P1.ROTATELEFT 45");
                         result = input.readLine();
 
-                    } else if (!turnedRight && right > 30 && southEast > 50) {
+                        // 10 forward
+                        robot.sendCommand("P1.MOVEFW 5");
+                        result = input.readLine();
+
+                        // 45 graden naar links
+                        robot.sendCommand("P1.ROTATELEFT 45");
+                        result = input.readLine();
+
+                    }
+                    updatePosition();
+                    if (!turnedRight && right > 25 && southEast > 50) {
 //                        // TODO: Deze kan subtielier
 //                        // rotate 90 naar rechts
 //                        robot.sendCommand("P1.ROTATERIGHT 90");
@@ -120,6 +131,7 @@ public class MobileRobotAI implements Runnable {
                         robot.sendCommand("P1.ROTATELEFT 45");
                         result = input.readLine();
                     }
+                    updatePosition();
                     if(right < 20 ){
                         double distance = 20 - right;
                         double schuin = Math.sin(Math.toRadians(45)) * distance;
@@ -144,7 +156,8 @@ public class MobileRobotAI implements Runnable {
 
                     turnedRight = false;
                 } else {
-                    if (southEast > 50) {
+                    // // TODO: 16/03/2016 deze moet worden berekent
+                    if (southEast > 45) {
                         // draai 90 rechts
                         robot.sendCommand("P1.ROTATERIGHT 45");
                         result = input.readLine();
@@ -173,15 +186,14 @@ public class MobileRobotAI implements Runnable {
 
                         turnedRight = true; // Na een rechterturn
                     }
-                    // moet hij niet meer proberen dichterbij de kant te gaan
-                    // stukje naar voren
-                    if (forward - 20 >= 0) {
-                        robot.sendCommand("P1.MOVEFW 20");
-                        result = input.readLine();
-                    } else {
-                        robot.sendCommand("P1.MOVEFW 10");
-                        result = input.readLine();
-                    }
+                    updatePosition();
+                    // Denken
+                    robot.sendCommand("L1.SCAN");
+                    result = input.readLine();
+                    parseMeasures(result, measures);
+                    map.drawLaserScan(position, measures);
+                    robot.sendCommand("P1.MOVEFW 10");
+                    result = input.readLine();
 
                 }
                 updatePosition();
