@@ -71,7 +71,6 @@ public class MobileRobotAI implements Runnable {
                     // set initial starting position
                     startPosition = position.clone();
                 }
-                boolean turning = false;
 
                 // Denken
                 robot.sendCommand("L1.SCAN");
@@ -79,136 +78,50 @@ public class MobileRobotAI implements Runnable {
                 parseMeasures(result, measures);
                 map.drawLaserScan(position, measures);
 
+                //Check positions
                 double forward = measures[0];
-                double northEast = measures[10];
                 double right = measures[90];
-                double southEast = measures[145];
 
-                System.out.println("Right:" + right);
-                System.out.println("southEast: " + southEast);
-                System.out.println("Forward: " + forward);
+                //System.out.println("Forward: " + forward);
+                //System.out.println("Right:" + right);
 
-                if(right < 100){
-
-                    if(forward < 30 || northEast < 20){
-                        // 45 graden naar links
-                        robot.sendCommand("P1.ROTATELEFT 45");
-                        result = input.readLine();
-
-                        // 10 forward
-                        robot.sendCommand("P1.MOVEFW 5");
-                        result = input.readLine();
-
-                        // 45 graden naar links
-                        robot.sendCommand("P1.ROTATELEFT 45");
-                        result = input.readLine();
-
-                    }
-                    updatePosition();
-                    if (!turnedRight && right > 25 && southEast > 50) {
-//                        // TODO: Deze kan subtielier
-//                        // rotate 90 naar rechts
-//                        robot.sendCommand("P1.ROTATERIGHT 90");
-//                        result = input.readLine();
-//
-//                        // movefw 20
-//                        robot.sendCommand("P1.MOVEFW 10");
-//                        result = input.readLine();
-//
-//                        // rotate 90 links
-//                        robot.sendCommand("P1.ROTATELEFT 90");
-//                        result = input.readLine();
-                        double overstaande = right - 25;
-                        double schuin = Math.sin(Math.toRadians(45)) * overstaande;
-
-                        robot.sendCommand("P1.ROTATERIGHT 45");
-                        result = input.readLine();
-
-                        // movefw 20
-                        robot.sendCommand(String.format("P1.MOVEFW %s", schuin));
-                        result = input.readLine();
-
-                        robot.sendCommand("P1.ROTATELEFT 45");
+                //If wall is near
+                if(right < 50) {
+                    //If wall is to far
+                    if(forward > 15.0) {
+                        robot.sendCommand("P1.MOVEFW " + Math.min((forward - 15.0), 20.0));
                         result = input.readLine();
                     }
-                    updatePosition();
-                    if(right < 20 ){
-                        double distance = 20 - right;
-                        double schuin = Math.sin(Math.toRadians(45)) * distance;
-                        // rotate 45 naar links
-
-                        robot.sendCommand("P1.ROTATELEFT 45");
-                        result = input.readLine();
-                        // movefw 20
-
-                        robot.sendCommand(String.format("P1.MOVEFW %s", 5));
-                        result = input.readLine();
-
-                        // rotate 45 right
-                        robot.sendCommand("P1.ROTATERIGHT 45");
+                    //If near wall
+                    else {
+                        robot.sendCommand("P1.ROTATELEFT 90");
                         result = input.readLine();
                     }
-
-                    double distance = 10;
-
-                    robot.sendCommand(String.format("P1.MOVEFW %s", distance));
-                    result = input.readLine();
-
-                    turnedRight = false;
-                } else {
-                    // // TODO: 16/03/2016 deze moet worden berekent
-                    if (southEast > 45) {
-                        // draai 90 rechts
-                        robot.sendCommand("P1.ROTATERIGHT 45");
-                        result = input.readLine();
-
-                        robot.sendCommand("P1.MOVEFW 5");
-                        result = input.readLine();
-
-                        robot.sendCommand("P1.ROTATELEFT 45");
-                        result = input.readLine();
-
-                        robot.sendCommand("P1.MOVEFW 10");
-                        result = input.readLine();
-
-                        robot.sendCommand("P1.ROTATERIGHT 45");
-                        result = input.readLine();
-
-                        robot.sendCommand("P1.MOVEFW 5");
-                        result = input.readLine();
-
-                        robot.sendCommand("P1.ROTATERIGHT 45");
-                        result = input.readLine();
-
-                        robot.sendCommand("P1.MOVEFW 10");
-                        result = input.readLine();
-
-
-                        turnedRight = true; // Na een rechterturn
-                    }
-                    updatePosition();
-                    // Denken
-                    robot.sendCommand("L1.SCAN");
-                    result = input.readLine();
-                    parseMeasures(result, measures);
-                    map.drawLaserScan(position, measures);
-                    robot.sendCommand("P1.MOVEFW 10");
-                    result = input.readLine();
-
                 }
-                updatePosition();
-                stepCount++;
-
-                if(stepCount > MAX_STEP_COUNT && Math.abs(position[0]-startPosition[0]) < 30 && Math.abs(position[1]-startPosition[1]) < 30){
-                    System.out.println("Done exploring");
-                    robot.sendCommand("P1.MOVEFW 5");
+                //If wall is to far or gone
+                else {
+                    robot.sendCommand("P1.MOVEFW " + (41.0));
                     result = input.readLine();
 
-                    robot.sendCommand("P1.ROTATERIGHT 360");
+                    robot.sendCommand("P1.ROTATERIGHT 90");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.MOVEFW " + (41.0));
+                    result = input.readLine();
+                }
+
+                if(stepCount > MAX_STEP_COUNT &&
+                        Math.abs(position[0] - startPosition[0]) < 30 &&
+                        Math.abs(position[1] - startPosition[1]) < 30) {
+                    System.out.println("Done exploring");
+
+                    robot.sendCommand("P1.ROTATELEFT 270");
                     result = input.readLine();
 
                     running = false;
                 }
+                stepCount++;
+                // repeat
                 // repeat
 
 			} catch (IOException ioe) {
