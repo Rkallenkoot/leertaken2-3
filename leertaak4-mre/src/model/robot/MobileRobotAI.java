@@ -98,6 +98,9 @@ public class MobileRobotAI implements Runnable {
                         result = input.readLine();
                     }
                 }
+
+
+
                 //If wall is to far or gone
                 else {
                     robot.sendCommand("P1.MOVEFW " + (41.0));
@@ -110,12 +113,20 @@ public class MobileRobotAI implements Runnable {
                     result = input.readLine();
                 }
 
+
+                // end
                 if(stepCount > MAX_STEP_COUNT &&
                         Math.abs(position[0] - startPosition[0]) < 30 &&
                         Math.abs(position[1] - startPosition[1]) < 30) {
                     System.out.println("Done exploring");
 
-                    robot.sendCommand("P1.ROTATELEFT 270");
+                    robot.sendCommand("P1.ROTATELEFT 45");
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.MOVEFW " + (10.0));
+                    result = input.readLine();
+
+                    robot.sendCommand("P1.ROTATELEFT 225");
                     result = input.readLine();
 
                     running = false;
