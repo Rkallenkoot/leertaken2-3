@@ -1,5 +1,8 @@
 package model.robot;
 
+import model.device.Device;
+import model.device.Laser;
+import model.device.Sonar;
 import model.virtualmap.OccupancyMap;
 
 import java.io.*;
@@ -25,6 +28,7 @@ public class MobileRobotAI implements Runnable {
 
     private double position[] = new double[3];
     private double measures[] = new double[360];
+    private double sonarMeasures[] = new double[360];
 
     private int stepCount;
 
@@ -75,15 +79,20 @@ public class MobileRobotAI implements Runnable {
                 // Denken
                 robot.sendCommand("L1.SCAN");
                 result = input.readLine();
-                parseMeasures(result, measures);
+                parseMeasures(result, robot.getSensors().get(0), measures);
                 map.drawLaserScan(position, measures);
+                // Eerst Laser, daarna Sonar.
+                // Als de Sonar iets ziet, wat dichterbij is dan dat de Laser heeft kunnen detecteren.
+                // Dan zetten we die meting in Measures i.p.v. de meting van de laser op die specifieke Direction.
+                robot.sendCommand("S1.SCAN");
+                result = input.readLine();
+                parseMeasures(result, robot.getSensors().get(1), sonarMeasures);
+                parseSonarMeasures(result, measures);
+                map.drawSonarScan(position, sonarMeasures);
 
                 //Check positions
-                double forward = measures[0];
+                double forward = measures[1];
                 double right = measures[90];
-
-                //System.out.println("Forward: " + forward);
-                //System.out.println("Right:" + right);
 
                 //If wall is near
                 if(right < 50) {
@@ -98,9 +107,6 @@ public class MobileRobotAI implements Runnable {
                         result = input.readLine();
                     }
                 }
-
-
-
                 //If wall is to far or gone
                 else {
                     robot.sendCommand("P1.MOVEFW " + (41.0));
@@ -133,7 +139,6 @@ public class MobileRobotAI implements Runnable {
                 }
                 stepCount++;
                 // repeat
-                // repeat
 
 			} catch (IOException ioe) {
 				System.err.println("execution stopped");
@@ -142,6 +147,7 @@ public class MobileRobotAI implements Runnable {
 		}
 
 	}
+
 
 
     private void updatePosition() throws IOException {
@@ -168,10 +174,42 @@ public class MobileRobotAI implements Runnable {
     }
 
 
-    private void parseMeasures(String value, double measures[]) {
+    private void parseSonarMeasures(String value, double[] measures) {
+        if (value.length() >= 5) {
+            value = value.substring(5);  // removes the "SCAN " keyword
+
+            StringTokenizer tokenizer = new StringTokenizer(value, " ");
+
+            double distance;
+            int direction;
+            while (tokenizer.hasMoreTokens()) {
+                distance = Double.parseDouble(tokenizer.nextToken().substring(2));
+                direction = (int) Math.round(Math.toDegrees(Double.parseDouble(tokenizer.nextToken().substring(2))));
+                if (direction == 360) {
+                    direction = 0;
+                }
+                if (distance < measures[direction]) {
+                    measures[direction] = distance;
+                }
+            }
+        }
+
+    }
+
+    private void parseMeasures(String value, Device device, double measures[]) {
+        int range;
+        if (device instanceof Laser) {
+            range = Laser.RANGE;
+        } else if (device instanceof Sonar) {
+            range = Sonar.RANGE;
+        } else {
+            // Default range naar 100
+            range = 100;
+        }
+
 		for (int i = 0; i < 360; i++) {
-			measures[i] = 100.0;
-		}
+            measures[i] = range;
+        }
 		if (value.length() >= 5) {
 			value = value.substring(5);  // removes the "SCAN " keyword
 

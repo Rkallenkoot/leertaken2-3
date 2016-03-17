@@ -3,17 +3,15 @@ package model.robot;
 import model.device.Device;
 import model.device.Laser;
 import model.device.Platform;
+import model.device.Sonar;
 import model.environment.Environment;
 import model.environment.Position;
 import model.virtualmap.OccupancyMap;
 
 import java.io.PrintWriter;
-
 import java.util.ArrayList;
-
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 /**
@@ -40,7 +38,7 @@ public class MobileRobot {
     private final MobileRobotAI intelligence;
 
 	private PrintWriter output;
-	private ThreadPoolExecutor executor;
+    private ExecutorService executor;
 
 	public MobileRobot(String name, double x, double y, double t, Environment environment,OccupancyMap map) {
 		this.sensors = new ArrayList<Device>();
@@ -48,7 +46,8 @@ public class MobileRobot {
 		this.position = new Position(x, y, Math.toRadians(t));
 		this.platform = new Platform("P1", this, environment);
 		this.sensors.add(new Laser("L1", this, new Position(20.0, 0.0, 0.0), environment));
-		delay = 50;
+        delay = 10;
+        this.sensors.add(new Sonar("S1", this, new Position(20.0, 0.0, 0.0), environment));
 
 		this.intelligence = new MobileRobotAI(this,map);
 
@@ -68,19 +67,17 @@ public class MobileRobot {
 	}
 
 	public void start() {
-		this.executor = new ThreadPoolExecutor(10, 100,
-				0L, TimeUnit.MILLISECONDS,
-				new LinkedBlockingQueue<Runnable>());
-		this.executor.execute(platform);
+//		this.executor = new ThreadPoolExecutor(10, 100,
+//				0L, TimeUnit.MILLISECONDS,
+//				new LinkedBlockingQueue<Runnable>());
+        this.executor = Executors.newCachedThreadPool();
+        this.executor.execute(platform);
 
 		for (Device sensor : sensors) {
 			this.executor.execute(sensor);
 
 		}
 		this.executor.execute(this.intelligence);
-
-
-
 	}
 
 	public void quit(){

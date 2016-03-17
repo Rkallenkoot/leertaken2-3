@@ -48,8 +48,8 @@ public class Platform extends Device {
 		this.addPoint(-20, 20);
 	}
 
-	public void executeCommand(String command) {
-		if (command.contains("ROTATERIGHT")) {
+    public void executeCommand(String command) {
+        if (command.contains("ROTATERIGHT")) {
 			double angle = Math.abs(Double.parseDouble(command.trim().substring(12).trim()));
 			numRotationSteps = angle / rotationStep;
 			orientation = CLOCKWISE_ORIENTATION;

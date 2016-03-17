@@ -11,6 +11,8 @@ package model.virtualmap;
  * @version 2.0
  */
 
+import model.device.Laser;
+import model.device.Sonar;
 import model.environment.Environment;
 import model.environment.Position;
 
@@ -63,8 +65,8 @@ public class OccupancyMap {
 			double fx = Math.round(rx + measures[d] * Math.cos(Math.toRadians(i)));
 			double fy = Math.round(ry + measures[d] * Math.sin(Math.toRadians(i)));
 
-			if (measures[d] < 100) {
-				drawLaserBeam(rx, ry, fx, fy, true);
+            if (measures[d] < Laser.RANGE) {
+                drawLaserBeam(rx, ry, fx, fy, true);
 			} else {
 				drawLaserBeam(rx, ry, fx, fy, false);
 			}
@@ -81,6 +83,39 @@ public class OccupancyMap {
 
 		this.processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 	}
+
+    public void drawSonarScan(double position[], double measures[]) {
+        double rx = Math.round(position[0] + 20.0 * Math.cos(Math.toRadians(position[2])));
+        double ry = Math.round(position[1] + 20.0 * Math.sin(Math.toRadians(position[2])));
+        int dir = (int) Math.round(position[2]);
+
+        for (int i = 0; i < 360; i++) {
+            int d = i - dir;
+            while (d < 0)
+                d += 360;
+            while (d >= 360)
+                d -= 360;
+            double fx = Math.round(rx + measures[d] * Math.cos(Math.toRadians(i)));
+            double fy = Math.round(ry + measures[d] * Math.sin(Math.toRadians(i)));
+
+            if (measures[d] < Sonar.RANGE) {
+                drawLaserBeam(rx, ry, fx, fy, true);
+            } else {
+                drawLaserBeam(rx, ry, fx, fy, false);
+            }
+        }
+
+        //paint robot position on grid
+        Position robotPos = environment.getRobot().getPlatform().getRobotPosition();
+        //environment.getRobot().readPosition(robotPos);
+
+        int robotX = (int) robotPos.getX() / CELL_DIMENSION;
+        int robotY = (int) robotPos.getY() / CELL_DIMENSION;
+        this.grid[robotX][robotY] = ROBOT;
+
+
+        this.processEvent(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+    }
 
 
 	/**
@@ -149,7 +184,16 @@ public class OccupancyMap {
 		this.environment = environment;
 	}
 
-	private void drawLaserBeam(double rx, double ry, double x, double y, boolean obstacle) {
+    /**
+     * Deze methode wordt gebruikt om de gegeven positie te painten op de OccupancyMap
+     *
+     * @param rx
+     * @param ry
+     * @param x
+     * @param y
+     * @param obstacle <code>true</code> als het een obstable is
+     */
+    private void drawLaserBeam(double rx, double ry, double x, double y, boolean obstacle) {
 		int rxi = (int) Math.ceil(rx / CELL_DIMENSION);
 		int ryj = (int) Math.ceil(ry / CELL_DIMENSION);
 		int xi = (int) Math.ceil(x / CELL_DIMENSION);

@@ -24,27 +24,22 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class Laser extends Device {
-	// JB: The fact that this code has a lot of comments with question marks in it (see below)
+    // maximum RANGE
+    public static final int RANGE = 100;
+    // JB: The fact that this code has a lot of comments with question marks in it (see below)
 	// does not give a lot of confidence. I have chosen to let the comments in, as they could be
 	// indicators where to look if things break down.
 	private static final int CLOCKWISE = 1;
 	private static final int ANTICLOCKWISE = -1;
-
-	// maximum range
-	private final int range = 100;
-
-	private int orientation = 1;
-
+    private final ArrayList<LaserMeasurement> scanMeasurements;
+    private int orientation = 1;
 	private double rotStep = 1.0;     // one degree
 	private double numSteps = 0;
-
 	// JB: The use of the booleans detect and scan (and Device.running) makes the code very complex
 	// and easy to break. See executeCommand() and nextStep(). This could do with a decent refactoring!
 	private boolean detect;
 	private boolean scan;
-
 	private LaserMeasurement detectMeasure;
-	private final ArrayList<LaserMeasurement> scanMeasurements;
 
 	public Laser(String name, MobileRobot robot, Position localPos, Environment environment) {
 		super(name, robot, localPos, environment);
@@ -56,16 +51,16 @@ public class Laser extends Device {
 
 		backgroundColor = Color.cyan;
 		this.addPoint(0, 2);
-		this.addPoint(100, 2);
-		this.addPoint(100, -2);
-		this.addPoint(0, -2);
+        this.addPoint(RANGE, 2);
+        this.addPoint(RANGE, -2);
+        this.addPoint(0, -2);
 	}
 
-	double read(boolean first) {
-		Point2D centre = new Point2D.Double(localPosition.getX(), localPosition.getY());
-		Point2D front = new Point2D.Double(localPosition.getX() + range * Math.cos(localPosition.getT()),
-				localPosition.getY() + range * Math.sin(localPosition.getT()));
-		// reads the robot's position
+    double read(boolean first) {
+        Point2D centre = new Point2D.Double(localPosition.getX(), localPosition.getY());
+        Point2D front = new Point2D.Double(localPosition.getX() + RANGE * Math.cos(localPosition.getT()),
+                localPosition.getY() + RANGE * Math.sin(localPosition.getT()));
+        // reads the robot's position
 		robot.readPosition(robotPosition);
 		// center's coordinates according to the robot position
 		robotPosition.rotateAroundAxis(centre);

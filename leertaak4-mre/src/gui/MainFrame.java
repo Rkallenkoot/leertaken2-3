@@ -12,19 +12,16 @@ package gui;
  * @version 2.0
  */
 
-import gui.controller.MenuBarController;
 import gui.controller.DelayController;
-import gui.controller.SimulationController;
+import gui.controller.MenuBarController;
 import gui.controller.OccupancyMapController;
-
+import gui.controller.SimulationController;
 import gui.views.OccupancyMapView;
 import gui.views.SimulationView;
-
 import model.environment.Environment;
 import model.virtualmap.OccupancyMap;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.io.File;
 
@@ -47,6 +44,16 @@ public class MainFrame extends JFrame {
 		//this class was originally named: TestApplication
 	}
 
+    /**
+     * The static void main, this is where the program starts.
+     *
+     * @param args String[]
+     */
+    public static void main(String[] args) {
+
+        MainFrame runner = new MainFrame();
+        runner.init();
+    }
 
 	public void init() {
 		if (this.isVisible()) {
@@ -112,19 +119,8 @@ public class MainFrame extends JFrame {
 		this.setVisible(true);
 
         ClassLoader loader = this.getClass().getClassLoader();
-		environment.loadMap(new File(loader.getResource("files/MapZonderSonarTest.xml").getFile()));
-	}
-
-	/**
-	 * The static void main, this is where the program starts.
-	 *
-	 * @param args String[]
-	 */
-	public static void main(String[] args) {
-
-		MainFrame runner = new MainFrame();
-		runner.init();
-	}
+        environment.loadMap(new File(loader.getResource("files/MapMetSonarTest.xml").getFile()));
+    }
 
 
 }

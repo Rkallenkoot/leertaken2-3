@@ -15,32 +15,27 @@ import model.environment.Environment;
 import model.environment.Position;
 import model.robot.MobileRobot;
 
-import java.awt.Polygon;
-import java.awt.Color;
-
+import java.awt.*;
 import java.io.PrintWriter;
-
 import java.util.ArrayList;
 
 public abstract class Device implements Runnable {
 
-
-
-	// A final object to make sure the lock cannot be overwritten with another Object
-	private final Object lock = new Object();
-  	private final String name;                    // the name of this device
-	private final Polygon shape;                  // the device's shape in local coords
-
+    public static final int RANGE = 100;
     // a reference to the environment
     protected final Environment environment;
    	// a reference to the robot
 	protected final MobileRobot robot;
 	// origin of the device reference frame with regards to the robot frame
 	protected final Position localPosition;
-    // the robot current position
-    protected Position robotPosition;
     // the arrayList with all the commands
     protected final ArrayList<String> commands;
+    // A final object to make sure the lock cannot be overwritten with another Object
+    private final Object lock = new Object();
+    private final String name;                    // the name of this device
+    private final Polygon shape;                  // the device's shape in local coords
+    // the robot current position
+    protected Position robotPosition;
     // the colors of the devices
 	protected Color backgroundColor = Color.red;
 	protected Color foregroundColor = Color.blue;
@@ -109,8 +104,8 @@ public abstract class Device implements Runnable {
 				if (executingCommand) {
 					// pause before the next step
 					synchronized (this) {
-						Thread.sleep(MobileRobot.delay);
-					}
+                        Thread.sleep(MobileRobot.delay);
+                    }
 				} else if (commands.size() > 0) {
 					// extracts the the next command and executes it
 					String command = commands.remove(0);

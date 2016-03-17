@@ -107,23 +107,45 @@ public class SimulationView extends JPanel implements ActionListener {
 		model.getRobot().readPosition(d.getRobotPosition());
 		Polygon currentShape = d.getShape();
 		// draws the shape
-		Polygon globalShape = new Polygon();
-		Point2D point = new Point2D.Double();
-		for (int i = 0; i < currentShape.npoints; i++) {
-			point.setLocation(currentShape.xpoints[i], currentShape.ypoints[i]);
-			// calculates the coordinates of the point according to the local position
-			d.getLocalPosition().rotateAroundAxis(point);
-			// calculates the coordinates of the point according to the robot position
-			d.getRobotPosition().rotateAroundAxis(point);
-			// adds the point to the global shape
-			globalShape.addPoint((int) Math.round(point.getX()), (int) Math.round(point.getY()));
-		}
-		g.setColor(d.getBackgroundColor());
-		g.fillPolygon(globalShape);
-		g.setColor(d.getForegroundColor());
-		g.drawPolygon(globalShape);
-	}
+        if (d.getName().equalsIgnoreCase("S1")) {
+            Point2D bami = new Point2D.Double();
+            bami.setLocation(currentShape.xpoints[0], currentShape.ypoints[0]);
+            // ik sla hier mijn idee op
+            // point rotate around axis swag
+            // boem point.getX op die bitch en meegeven aan g.drawOval
+            d.getLocalPosition().rotateAroundAxis(bami);
+            d.getRobotPosition().rotateAroundAxis(bami);
+            g.setColor(new Color(1f, 1f, 1f, .3f));
+            int diameter = 200;
 
+            int x = (int) Math.round(bami.getX());
+            int y = (int) Math.round(bami.getY());
+            drawSonar(g, x, y, diameter);
+        } else {
+            Polygon globalShape = new Polygon();
+            Point2D point = new Point2D.Double();
+            for (int i = 0; i < currentShape.npoints; i++) {
+                point.setLocation(currentShape.xpoints[i], currentShape.ypoints[i]);
+                // calculates the coordinates of the point according to the local position
+                d.getLocalPosition().rotateAroundAxis(point);
+                // calculates the coordinates of the point according to the robot position
+                d.getRobotPosition().rotateAroundAxis(point);
+                // adds the point to the global shape
+                globalShape.addPoint((int) Math.round(point.getX()), (int) Math.round(point.getY()));
+            }
+            g.setColor(d.getBackgroundColor());
+            g.fillPolygon(globalShape);
+            g.setColor(d.getForegroundColor());
+            g.drawPolygon(globalShape);
+        }
+    }
+
+
+    private void drawSonar(Graphics g, int x, int y, int diameter) {
+        int radius = (diameter / 2);
+        g.drawOval(x - radius, y - radius, diameter, diameter);
+        g.fillOval(x - radius, y - radius, diameter, diameter);
+    }
 
 	/**
 	 * Invoked when an action occurs.
