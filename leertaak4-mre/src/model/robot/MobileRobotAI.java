@@ -63,11 +63,10 @@ public class MobileRobotAI implements Runnable {
 	public void run() {
 		String result;
 		this.running = true;
-
+        boolean turning = false;
         double startPosition[] = new double[]{-1, -1, 0};
-
         System.out.println("intelligence running");
-        boolean turnedRight = false;
+
 		while (running) {
 			try {
                 updatePosition();
@@ -81,6 +80,7 @@ public class MobileRobotAI implements Runnable {
                 result = input.readLine();
                 parseMeasures(result, robot.getSensors().get(0), measures);
                 map.drawLaserScan(position, measures);
+
                 // Eerst Laser, daarna Sonar.
                 // Als de Sonar iets ziet, wat dichterbij is dan dat de Laser heeft kunnen detecteren.
                 // Dan zetten we die meting in Measures i.p.v. de meting van de laser op die specifieke Direction.
@@ -92,24 +92,41 @@ public class MobileRobotAI implements Runnable {
 
                 //Check positions
                 double forward = measures[1];
+                double northEast = measures[45];
                 double right = measures[90];
 
-                //If wall is near
+                // Wall fix
                 if(right < 50) {
                     //If wall is to far
-                    if(forward > 15.0) {
-                        robot.sendCommand("P1.MOVEFW " + Math.min((forward - 15.0), 20.0));
-                        result = input.readLine();
+                    if(forward > 20.0) {
+                        if(right < 25 || (!turning && northEast < 29.5)){
+                            int eastOffset = Math.max(30-(int)Math.floor(right),30-(int)Math.floor(northEast));
+                            int distance = (int)Math.floor(eastOffset / Math.sin(Math.toRadians(45)));
+
+                            robot.sendCommand("P1.ROTATELEFT 45");
+                            result = input.readLine();
+
+                            robot.sendCommand("P1.MOVEFW " + distance);
+                            result = input.readLine();
+
+                            robot.sendCommand("P1.ROTATERIGHT 45");
+                            result = input.readLine();
+                        } else {
+                            robot.sendCommand("P1.MOVEFW " + Math.min((forward - 15.0), 20.0));
+                            result = input.readLine();
+                        }
+                        turning = false;
                     }
-                    //If near wall
+                    // Wall ahead, linkerbocht
                     else {
                         robot.sendCommand("P1.ROTATELEFT 90");
                         result = input.readLine();
+                        turning = true;
                     }
                 }
-                //If wall is to far or gone
+                // If wall is to far or gone
                 else {
-                    robot.sendCommand("P1.MOVEFW " + (41.0));
+                    robot.sendCommand("P1.MOVEFW " + (38.0));
                     result = input.readLine();
 
                     robot.sendCommand("P1.ROTATERIGHT 90");
@@ -129,7 +146,7 @@ public class MobileRobotAI implements Runnable {
                     robot.sendCommand("P1.ROTATELEFT 45");
                     result = input.readLine();
 
-                    robot.sendCommand("P1.MOVEFW " + (10.0));
+                    robot.sendCommand("P1.MOVEFW " + (5.0));
                     result = input.readLine();
 
                     robot.sendCommand("P1.ROTATELEFT 225");

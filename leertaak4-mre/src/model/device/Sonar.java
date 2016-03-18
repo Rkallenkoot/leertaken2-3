@@ -33,6 +33,7 @@ public class Sonar extends Device {
         this.scan = false;
 
         this.backgroundColor = new Color(1f, 1f, 1f, .1f);
+        this.foregroundColor = new Color(0f, 0f,0f,.4f);
         this.addPoint(0, 0);
     }
 

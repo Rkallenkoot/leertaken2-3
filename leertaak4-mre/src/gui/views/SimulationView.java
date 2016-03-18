@@ -29,6 +29,7 @@ package gui.views;
  */
 
 import model.device.Device;
+import model.device.Sonar;
 import model.environment.Environment;
 import model.environment.Obstacle;
 
@@ -107,12 +108,9 @@ public class SimulationView extends JPanel implements ActionListener {
 		model.getRobot().readPosition(d.getRobotPosition());
 		Polygon currentShape = d.getShape();
 		// draws the shape
-        if (d.getName().equalsIgnoreCase("S1")) {
+        if (d instanceof Sonar){
             Point2D bami = new Point2D.Double();
             bami.setLocation(currentShape.xpoints[0], currentShape.ypoints[0]);
-            // ik sla hier mijn idee op
-            // point rotate around axis swag
-            // boem point.getX op die bitch en meegeven aan g.drawOval
             d.getLocalPosition().rotateAroundAxis(bami);
             d.getRobotPosition().rotateAroundAxis(bami);
             g.setColor(new Color(1f, 1f, 1f, .3f));
