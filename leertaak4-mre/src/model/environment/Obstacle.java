@@ -22,8 +22,8 @@ public class Obstacle {
     private static final Color STANDARD_FOREGROUND_COLOR = Color.ORANGE;
     private static final Color STANDARD_BACKGROUND_COLOR = Color.BLUE;
 
-    private static final Color STANDARD_OPAQUE_BACKGROUND_COLOR = Color.MAGENTA;
-    private static final Color STANDARD_OPAQUE_FOREGROUND_COLOR = Color.DARK_GRAY;
+    public static final Color STANDARD_OPAQUE_BACKGROUND_COLOR = Color.MAGENTA;
+    public static final Color STANDARD_OPAQUE_FOREGROUND_COLOR = Color.DARK_GRAY;
 
     // This polygon contains the corner points of the obstacle.
     protected final Polygon polygon;

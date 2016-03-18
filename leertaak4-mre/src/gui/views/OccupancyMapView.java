@@ -1,6 +1,7 @@
 package gui.views;
 
 
+import model.environment.Obstacle;
 import model.virtualmap.OccupancyMap;
 
 import javax.swing.*;
@@ -23,10 +24,12 @@ public class OccupancyMapView extends JPanel implements ActionListener {
 	private static final char UNKNOWN = 'n';
 	private static final char EMPTY = 'e';
 	private static final char OBSTACLE = 'o';
+    private static final char OPAQUE_OBSTACLE = 'b';
 	private static final char ROBOT = 'r';
 
 	private static final Color MAP_UNKNOWN_COLOR = Color.YELLOW;
 	private static final Color MAP_OBSTACLE_COLOR = Color.BLUE;
+    private static final Color MAP_OPAQUE_COLOR = Color.MAGENTA;
 	private static final Color MAP_ROBOT_COLOR = Color.BLACK;
 
 	private static final Color GRID_COLOR = Color.LIGHT_GRAY;
@@ -73,8 +76,10 @@ public class OccupancyMapView extends JPanel implements ActionListener {
 				} else if (grid[row][column] == ROBOT) {
 					g.setColor(OccupancyMapView.MAP_ROBOT_COLOR);
 					g.fillRect(row * cellDimension, column * cellDimension, cellDimension, cellDimension);
-				}
-
+				} else if(grid[row][column] == OPAQUE_OBSTACLE){
+                    g.setColor(OccupancyMapView.MAP_OPAQUE_COLOR);
+                    g.fillRect(row * cellDimension, column * cellDimension, cellDimension, cellDimension);
+                }
 			}
 		}
 	}

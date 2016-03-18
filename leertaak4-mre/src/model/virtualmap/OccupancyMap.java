@@ -25,6 +25,7 @@ public class OccupancyMap {
 	private final char UNKNOWN = 'n';
 	private final char EMPTY = 'e';
 	private final char OBSTACLE = 'o';
+    private final char OPAQUE_OBSTACLE = 'b';
 	private final char ROBOT = 'r';
 
 	private final int CELL_DIMENSION = 10;
@@ -99,9 +100,9 @@ public class OccupancyMap {
             double fy = Math.round(ry + measures[d] * Math.sin(Math.toRadians(i)));
 
             if (measures[d] < Sonar.RANGE) {
-                drawLaserBeam(rx, ry, fx, fy, true);
+                drawSonarBeam(rx, ry, fx, fy, true);
             } else {
-                drawLaserBeam(rx, ry, fx, fy, false);
+                drawSonarBeam(rx, ry, fx, fy, false);
             }
         }
 
@@ -204,7 +205,7 @@ public class OccupancyMap {
 
 		if (obstacle) {
 			grid[xi][yj] = OBSTACLE;
-		} else if (grid[xi][yj] != OBSTACLE) {
+		} else if (grid[xi][yj] != OBSTACLE && grid[xi][yj] != OPAQUE_OBSTACLE) {
 			grid[xi][yj] = EMPTY;
 		}
 
@@ -215,7 +216,7 @@ public class OccupancyMap {
 
 		if (rx == x) {
 			for (int j = ymin; j <= ymax; j++) {
-				if (grid[xmin][j] != OBSTACLE)
+				if (grid[xmin][j] != OBSTACLE && grid[xmin][j] != OPAQUE_OBSTACLE)
 					grid[xmin][j] = EMPTY;
 			}
 		} else {
@@ -224,12 +225,51 @@ public class OccupancyMap {
 			for (int i = xmin; i <= xmax; i++) {
 				int h = (int) Math.ceil((m * (i * CELL_DIMENSION) + q) / CELL_DIMENSION);
 				if (h >= ymin && h <= ymax) {
-					if (grid[i][h] != OBSTACLE)
+					if (grid[i][h] != OPAQUE_OBSTACLE && grid[i][h] != OBSTACLE)
 						grid[i][h] = EMPTY;
 
 				}
 			}
 		}
 	}
+
+    private void drawSonarBeam(double rx, double ry, double x, double y, boolean obstacle) {
+        int rxi = (int) Math.ceil(rx / CELL_DIMENSION);
+        int ryj = (int) Math.ceil(ry / CELL_DIMENSION);
+        int xi = (int) Math.ceil(x / CELL_DIMENSION);
+        int yj = (int) Math.ceil(y / CELL_DIMENSION);
+
+        if (xi < 0 || yj < 0 || xi >= MAP_WIDTH / CELL_DIMENSION || yj >= MAP_HEIGHT / CELL_DIMENSION)
+            return;
+
+        if (obstacle) {
+            grid[xi][yj] = OPAQUE_OBSTACLE;
+        } else if (grid[xi][yj] != OBSTACLE && grid[xi][yj] != OPAQUE_OBSTACLE) {
+            grid[xi][yj] = EMPTY;
+        }
+
+        int xmin = Math.min(rxi, xi);
+        int xmax = Math.max(rxi, xi);
+        int ymin = Math.min(ryj, yj);
+        int ymax = Math.max(ryj, yj);
+
+        if (rx == x) {
+            for (int j = ymin; j <= ymax; j++) {
+                if (grid[xmin][j] != OBSTACLE && grid[xmin][j] != OPAQUE_OBSTACLE)
+                    grid[xmin][j] = EMPTY;
+            }
+        } else {
+            double m = (y - ry) / (x - rx);
+            double q = y - m * x;
+            for (int i = xmin; i <= xmax; i++) {
+                int h = (int) Math.ceil((m * (i * CELL_DIMENSION) + q) / CELL_DIMENSION);
+                if (h >= ymin && h <= ymax) {
+                    if (grid[i][h] != OBSTACLE && grid[i][h] != OPAQUE_OBSTACLE){
+                        grid[i][h] = EMPTY;
+                    }
+                }
+            }
+        }
+    }
 
 }

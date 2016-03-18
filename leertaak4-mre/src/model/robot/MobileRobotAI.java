@@ -124,7 +124,7 @@ public class MobileRobotAI implements Runnable {
                         turning = true;
                     }
                 }
-                // If wall is to far or gone
+                // FIXME: 18/03/2016 magic
                 else {
                     robot.sendCommand("P1.MOVEFW " + (38.0));
                     result = input.readLine();
@@ -135,7 +135,6 @@ public class MobileRobotAI implements Runnable {
                     robot.sendCommand("P1.MOVEFW " + (41.0));
                     result = input.readLine();
                 }
-
 
                 // end
                 if(stepCount > MAX_STEP_COUNT &&
